@@ -34,6 +34,14 @@ public class AuthenticationService {
                 .role(Role.USER)
                 .build();
 
+        if (repository.findByUsername(user.getUsername()).isPresent()) {
+            throw new ConflictException("Provided username is already in use");
+        }
+
+        if (repository.findByEmail(user.getEmail()).isPresent()) {
+            throw new ConflictException("Provided email is already in use");
+        }
+
         repository.save(user);
         return new AuthenticationResponse(jwtService.generateToken(user));
     }

@@ -26,4 +26,11 @@ public class GlobalExceptionHandler {
         });
         return errors;
     }
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    public Map<String, String> handleConflictExceptions(ConflictException ex) {
+        return Map.of("message", ex.getMessage());
+    }
 }
