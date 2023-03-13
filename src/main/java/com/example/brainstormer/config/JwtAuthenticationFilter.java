@@ -1,5 +1,6 @@
 package com.example.brainstormer.config;
 
+import com.example.brainstormer.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

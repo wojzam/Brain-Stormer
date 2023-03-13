@@ -1,4 +1,4 @@
-package com.example.brainstormer.config;
+package com.example.brainstormer.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
