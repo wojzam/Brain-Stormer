@@ -1,6 +1,16 @@
-version: '3'
+version: '3.8'
 
 services:
+  frontend:
+    container_name: react-app
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    ports:
+      - '3000:3000'
+    networks:
+        - app-network
+    restart: always
   db:
     container_name: postgres
     image: postgres:latest
@@ -14,11 +24,11 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - db
-    restart: unless-stopped
+      - app-network
+    restart: always
 
 networks:
-  db:
+  app-network:
     driver: bridge
 
 volumes:
