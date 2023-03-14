@@ -9,7 +9,7 @@ services:
     ports:
       - '3000:3000'
     networks:
-        - app-network
+      - app-network
     restart: always
   db:
     container_name: postgres
