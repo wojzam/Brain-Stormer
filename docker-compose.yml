@@ -8,9 +8,30 @@ services:
       dockerfile: docker/frontend/Dockerfile
     ports:
       - '3000:3000'
+    depends_on:
+      - backend
     networks:
       - app-network
     restart: always
+
+  backend:
+    container_name: spring-boot-app
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/brain-stormer
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+    networks:
+      - app-network
+    restart: always
+
   db:
     container_name: postgres
     image: postgres:latest
