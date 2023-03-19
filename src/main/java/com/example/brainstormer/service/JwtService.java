@@ -19,7 +19,7 @@ public class JwtService {
 
     //TODO keep secret key safe
     private static final String SECRET_KEY = "34743777217A25432A462D4A614E645267556B58703273357538782F413F4428";
-    private static final int EXPIRATION = 1000 * 60 * 24;
+    private static final int EXPIRATION = 1000 * 60 * 60 * 24;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
