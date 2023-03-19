@@ -82,12 +82,12 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void shouldReturnOk_whenRegistrationIsSuccessful() throws Exception {
+    public void shouldReturnCreated_whenRegistrationIsSuccessful() throws Exception {
         mvc
                 .perform(post(REGISTER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerRequest))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print()).andExpect(status().isCreated());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class AuthenticationControllerTest {
                 .perform(post(REGISTER_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(registerRequest))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print());
 
         mvc
                 .perform(post(AUTHENTICATE_PATH)
