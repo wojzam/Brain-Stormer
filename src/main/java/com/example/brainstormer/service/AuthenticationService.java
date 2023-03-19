@@ -3,19 +3,20 @@ package com.example.brainstormer.service;
 import com.example.brainstormer.dto.AuthenticationRequest;
 import com.example.brainstormer.dto.AuthenticationResponse;
 import com.example.brainstormer.dto.RegisterRequest;
-import com.example.brainstormer.exception.ConflictException;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -35,11 +36,11 @@ public class AuthenticationService {
                 .build();
 
         if (repository.findByUsername(user.getUsername()).isPresent()) {
-            throw new ConflictException("Provided username is already in use");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Provided username is already in use");
         }
 
         if (repository.findByEmail(user.getEmail()).isPresent()) {
-            throw new ConflictException("Provided email is already in use");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Provided email is already in use");
         }
 
         repository.save(user);
@@ -57,11 +58,11 @@ public class AuthenticationService {
         return new AuthenticationResponse(jwtService.generateToken(user));
     }
 
-    public Optional<User> getLoggedInUser() {
+    public User getLoggedInUser() throws NoSuchElementException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
-            return repository.findByUsername(authentication.getName());
+            return repository.findByUsername(authentication.getName()).orElseThrow();
         }
-        return Optional.empty();
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not logged in");
     }
 }
