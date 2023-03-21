@@ -2,12 +2,14 @@ package com.example.brainstormer.dto;
 
 import com.example.brainstormer.model.Topic;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class TopicExtendedDTO {
     private UUID id;
     private String title;

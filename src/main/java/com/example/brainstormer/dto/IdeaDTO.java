@@ -2,10 +2,12 @@ package com.example.brainstormer.dto;
 
 import com.example.brainstormer.model.Idea;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
 public class IdeaDTO {
     private UUID id;
     private String title;
