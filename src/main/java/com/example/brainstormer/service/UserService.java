@@ -1,5 +1,6 @@
 package com.example.brainstormer.service;
 
+import com.example.brainstormer.dto.UpdatePasswordRequest;
 import com.example.brainstormer.dto.UserDTO;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.UserRepository;
@@ -41,14 +42,14 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(String oldPassword, String newPassword) {
+    public void updatePassword(UpdatePasswordRequest request) {
         User user = authenticationService.getLoggedInUser();
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Provided old password is incorrect");
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
     public void deleteUser() {
