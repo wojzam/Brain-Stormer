@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 public class TopicExtendedDTO {
@@ -21,13 +22,12 @@ public class TopicExtendedDTO {
         this.description = topic.getDescription();
         this.publicVisibility = topic.isPublicVisibility();
 
-        // TODO not working
-//        this.ideas = topic.getIdeas().stream()
-//                .map(IdeaDTO::new)
-//                .collect(Collectors.toList());
-//
-//        this.collaborators = topic.getCollaborators().stream()
-//                .map(UserDTO::new)
-//                .collect(Collectors.toList());
+        this.ideas = topic.getIdeas().stream()
+                .map(IdeaDTO::new)
+                .collect(Collectors.toList());
+
+        this.collaborators = topic.getCollaborators().stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
     }
 }

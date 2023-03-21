@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,12 +47,10 @@ public class Idea {
 
     //TODO this relation is not working
     @OneToMany(mappedBy = "idea", fetch = FetchType.EAGER)
-    private Set<Vote> votes;
+    @Builder.Default
+    private Set<Vote> votes = new HashSet<>();
 
     public int sumAllVotes() {
-        if (votes == null) {
-            return 0;
-        }
         return votes.stream().mapToInt(Vote::getValue).sum();
     }
 }

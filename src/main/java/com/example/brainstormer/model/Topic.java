@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,11 +43,13 @@ public class Topic {
     private User creator;
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
-    private Set<Idea> ideas;
+    @Builder.Default
+    private Set<Idea> ideas = new HashSet<>();
 
     //TODO there is a problem with deleting user or topic
     @ManyToMany(cascade = CascadeType.ALL)
-    private Set<User> collaborators;
+    @Builder.Default
+    private Set<User> collaborators = new HashSet<>();
 
     public void addCollaborator(User user) {
         collaborators.add(user);
