@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.brainstormer.TestConstants.*;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,11 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class AuthenticationControllerTest {
 
-    private final static String REGISTER_PATH = "/auth/register";
-    private final static String AUTHENTICATE_PATH = "/auth/authenticate";
-    private final static String USERNAME = "username";
-    private final static String EMAIL = "email@email.com";
-    private final static String PASSWORD = "password";
+    private static final String REGISTER_PATH = "/auth/register";
+    private static final String AUTHENTICATE_PATH = "/auth/authenticate";
     private static String registerRequest;
     private static String authenticationRequest;
     private static ObjectMapper objectMapper;
