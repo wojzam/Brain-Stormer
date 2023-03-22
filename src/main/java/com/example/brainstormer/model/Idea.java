@@ -1,10 +1,7 @@
 package com.example.brainstormer.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -45,9 +42,10 @@ public class Idea {
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    //TODO this relation is not working
     @OneToMany(mappedBy = "idea", fetch = FetchType.EAGER)
     @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Vote> votes = new HashSet<>();
 
     public int sumAllVotes() {

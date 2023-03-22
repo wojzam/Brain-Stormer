@@ -1,10 +1,7 @@
 package com.example.brainstormer.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -44,11 +41,20 @@ public class Topic {
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
     @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Idea> ideas = new HashSet<>();
 
     //TODO there is a problem with deleting user or topic
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "topic_collaborators",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<User> collaborators = new HashSet<>();
 
     public void addCollaborator(User user) {
