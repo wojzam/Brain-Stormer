@@ -12,6 +12,8 @@ import com.example.brainstormer.repository.UserRepository;
 import com.example.brainstormer.service.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static com.example.brainstormer.TestConstants.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -57,6 +60,8 @@ public class IdeaControllerTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @PersistenceContext
+    private EntityManager entityManager;
     private Topic topic;
     private Idea idea;
     private String token;
@@ -219,5 +224,52 @@ public class IdeaControllerTest {
                 .andDo(print());
 
         assertTrue(ideaRepository.findById(idea.getId()).isEmpty());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 1})
+    void shouldVote(int value) throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + idea.getId() + "/vote")
+                        .param("value", String.valueOf(value))))
+                .andDo(print());
+
+        Idea votedIdea = ideaRepository.findById(idea.getId()).orElseThrow();
+        assertEquals(value, votedIdea.sumAllVotes());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 1})
+    void shouldVoteOncePerIdea(int value) throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + idea.getId() + "/vote")
+                        .param("value", String.valueOf(value))))
+                .andDo(print());
+
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + idea.getId() + "/vote")
+                        .param("value", String.valueOf(value))))
+                .andDo(print());
+
+        Idea votedIdea = ideaRepository.findById(idea.getId()).orElseThrow();
+        assertEquals(value, votedIdea.sumAllVotes());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 1})
+    void shouldDeleteVote(int value) throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + idea.getId() + "/vote")
+                        .param("value", String.valueOf(value))));
+
+        mvc
+                .perform(requestWithJwtTokenHeader(delete(PATH + "/" + idea.getId() + "/vote")))
+                .andDo(print());
+
+        entityManager.flush();
+        entityManager.refresh(idea);
+
+        Idea votedIdea = ideaRepository.findById(idea.getId()).orElseThrow();
+        assertEquals(0, votedIdea.sumAllVotes());
     }
 }
