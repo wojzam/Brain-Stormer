@@ -29,6 +29,9 @@ public class Topic {
     @Column(length = 1000)
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     private boolean publicVisibility;
 
     @CreationTimestamp

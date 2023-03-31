@@ -3,6 +3,7 @@ package com.example.brainstormer.service;
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
 import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.repository.TopicRepository;
 import com.example.brainstormer.repository.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +29,16 @@ public class PublicService {
         return userRepository.findAllByUsernameContainingIgnoreCase(username).stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public LinkedHashMap<String, String> getCategoriesNames() {
+        return Arrays.stream(Category.values())
+                .collect(Collectors.toMap(
+                        Category::name,
+                        Category::toString,
+                        (v1, v2) -> v1,
+                        LinkedHashMap::new
+                ));
     }
 
     public List<TopicDTO> getPublicTopics() {

@@ -7,6 +7,7 @@ import com.example.brainstormer.service.PublicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +21,11 @@ public class PublicController {
     @GetMapping("/user")
     public List<UserDTO> getUsers(@RequestParam String username) {
         return publicService.getUsers(username);
+    }
+
+    @GetMapping("/category")
+    public LinkedHashMap<String, String> getCategories() {
+        return publicService.getCategoriesNames();
     }
 
     @GetMapping("/topic")

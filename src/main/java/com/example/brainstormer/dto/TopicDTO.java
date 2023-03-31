@@ -12,10 +12,12 @@ public class TopicDTO {
     private UUID id;
     private String title;
     private String description;
+    private String categoryName;
 
     public TopicDTO(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
         this.description = topic.getDescription();
+        this.categoryName = topic.getCategory().name();
     }
 }

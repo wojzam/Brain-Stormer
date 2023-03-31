@@ -3,6 +3,7 @@ package com.example.brainstormer.service;
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.TopicRepository;
@@ -51,6 +52,7 @@ public class TopicService {
         Topic topic = Topic.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
+                .category(Category.parseCategoryName(request.getCategoryName()))
                 .publicVisibility(request.getPublicVisibility())
                 .creator(loggedInUser)
                 .build();

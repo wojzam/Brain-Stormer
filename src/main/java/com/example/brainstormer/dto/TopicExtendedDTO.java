@@ -14,6 +14,7 @@ public class TopicExtendedDTO {
     private UUID id;
     private String title;
     private String description;
+    private String categoryName;
     private boolean publicVisibility;
     private List<IdeaDTO> ideas;
     private List<UserDTO> collaborators;
@@ -22,6 +23,7 @@ public class TopicExtendedDTO {
         this.id = topic.getId();
         this.title = topic.getTitle();
         this.description = topic.getDescription();
+        this.categoryName = topic.getCategory().name();
         this.publicVisibility = topic.isPublicVisibility();
 
         this.ideas = topic.getIdeas().stream()
