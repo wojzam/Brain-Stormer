@@ -1,22 +1,29 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+import { Link, Box, Typography } from "@mui/material";
 
-export default function Topic({ text }) {
+export default function Topic({ title, description }) {
   return (
-    <Box
-      sx={{
-        width: "100%",
-        overflow: "hidden",
-        "& > :not(style)": {
-          m: 1,
-          flexGrow: 1,
-          height: 128,
-        },
-      }}
-    >
-      <Paper variant="outlined" elevation={3}>
-        <h2>{text}</h2>
-      </Paper>
-    </Box>
+    <Link href="/topic" color="inherit" underline="none" width="100%">
+      <Box
+        sx={{
+          my: 2,
+          px: 5,
+          py: 2,
+          border: "solid",
+          borderColor: "transparent",
+          borderRadius: 8,
+          background: "#ededed",
+          boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
+          "&:hover": {
+            background: "#dedede",
+            borderColor: "#d1d1d1",
+          },
+        }}
+      >
+        <Typography component="h2" variant="h4" fontWeight="medium">
+          {title}
+        </Typography>
+        <Typography variant="h6">{description}</Typography>
+      </Box>
+    </Link>
   );
 }

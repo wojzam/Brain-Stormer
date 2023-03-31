@@ -1,12 +1,16 @@
 import React from "react";
-import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { IconButton, Typography } from "@mui/material";
 
-export default function BackButton({ onClick }) {
+export default function BackButton() {
+  const goBack = () => {
+    window.history.back();
+  };
+
   return (
-    <IconButton onClick={onClick}>
+    <IconButton onClick={goBack}>
       <ArrowBackIcon />
-      Back
+      <Typography variant="h6">Back</Typography>
     </IconButton>
   );
 }

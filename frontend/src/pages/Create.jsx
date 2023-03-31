@@ -8,6 +8,19 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Autocomplete from "@mui/material/Autocomplete";
+import Typography from "@mui/material/Typography";
+import CollaboratorsDialog from "../components/CollaboratorsDialog";
+
+const categories = [
+  { label: "Business" },
+  { label: "Education" },
+  { label: "Science and Technology" },
+  { label: "Health and Medicine" },
+  { label: "Arts and Culture" },
+  { label: "Fashion and Style" },
+  { label: "Home and Design" },
+  { label: "Personal Development and Self-Improvement" },
+];
 
 export default function Create() {
   const handleSubmit = (event) => {
@@ -29,7 +42,9 @@ export default function Create() {
           alignItems: "center",
         }}
       >
-        <h2>Create topic</h2>
+        <Typography component="h1" variant="h4" gutterBottom>
+          Create topic
+        </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -81,9 +96,7 @@ export default function Create() {
               </RadioGroup>
             </Grid>
           </Grid>
-          <Button fullWidth variant="text" sx={{ mt: 3, mb: 2 }}>
-            Add Collaborators
-          </Button>
+          <CollaboratorsDialog />
           <Button
             type="submit"
             fullWidth
@@ -97,21 +110,3 @@ export default function Create() {
     </Container>
   );
 }
-
-const categories = [
-  { label: "Business" },
-  { label: "Education" },
-  { label: "Science and Technology" },
-  { label: "Health and Medicine" },
-  { label: "Environment and Sustainability" },
-  { label: "Arts and Culture" },
-  { label: "Sports and Recreation" },
-  { label: "Travel and Tourism" },
-  { label: "Social Issues and Ethics" },
-  { label: "Politics and Government" },
-  { label: "History and Heritage" },
-  { label: "Food and Beverage" },
-  { label: "Fashion and Style" },
-  { label: "Home and Design" },
-  { label: "Personal Development and Self-Improvement" },
-];

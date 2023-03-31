@@ -1,11 +1,9 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
@@ -29,10 +27,7 @@ export default function SignUp() {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4" gutterBottom>
           Sign up
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -44,7 +39,6 @@ export default function SignUp() {
                 id="username"
                 label="Username"
                 name="username"
-                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -90,7 +84,7 @@ export default function SignUp() {
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
-                Already have an account? Sign in
+                Already have an account? Log in
               </Link>
             </Grid>
           </Grid>
