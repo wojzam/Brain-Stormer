@@ -3,6 +3,7 @@ package com.example.brainstormer;
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -14,6 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.example.brainstormer.TestConstants.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -71,6 +75,7 @@ public class TopicControllerTest {
                 Topic.builder()
                         .title(TITLE)
                         .description(DESCRIPTION)
+                        .category(CATEGORY)
                         .publicVisibility(false)
                         .creator(user)
                         .build()
@@ -84,7 +89,7 @@ public class TopicControllerTest {
     }
 
     private String topicCreateRequest() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, false));
+        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.name(), false));
     }
 
     @Test
@@ -119,6 +124,21 @@ public class TopicControllerTest {
                         .content(topicCreateRequest())))
                 .andDo(print())
                 .andExpect(status().isCreated());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"abc", "category", ""})
+    void shouldReturnBadRequest_whenCategoryIsInvalid(String invalidCategoryName) throws Exception {
+        String topicCreateRequest = objectMapper.writeValueAsString(
+                new TopicCreateRequest(TITLE, DESCRIPTION, invalidCategoryName, false)
+        );
+
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(topicCreateRequest)))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -168,11 +188,33 @@ public class TopicControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        TopicDTO createdTopic = objectMapper.readValue(
+        UUID topicID = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
                 TopicDTO.class
+        ).getId();
+        assertTrue(topicRepository.findById(topicID).isPresent());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"BUSINESS", "EDUCATION", "LIFESTYLE", "SCIENCE_AND_TECHNOLOGY"})
+    void shouldCreateTopicWithCorrectCategory(String categoryName) throws Exception {
+        String topicCreateRequest = objectMapper.writeValueAsString(
+                new TopicCreateRequest(TITLE, DESCRIPTION, categoryName, false)
         );
-        assertTrue(topicRepository.findById(createdTopic.getId()).isPresent());
+
+        MvcResult result = mvc
+                .perform(requestWithJwtTokenHeader(post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(topicCreateRequest)))
+                .andDo(print())
+                .andReturn();
+
+        UUID topicID = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                TopicDTO.class
+        ).getId();
+        Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
+        assertEquals(Category.valueOf(categoryName), createdTopic.getCategory());
     }
 
     @Test

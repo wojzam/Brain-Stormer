@@ -59,6 +59,7 @@ public class PublicControllerTest {
                 Topic.builder()
                         .title(TITLE)
                         .description(DESCRIPTION)
+                        .category(CATEGORY)
                         .publicVisibility(true)
                         .creator(user)
                         .build()
