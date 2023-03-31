@@ -2,12 +2,10 @@ package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.dto.UserDTO;
 import com.example.brainstormer.service.PublicService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +16,11 @@ import java.util.UUID;
 public class PublicController {
 
     private final PublicService publicService;
+
+    @GetMapping("/user")
+    public List<UserDTO> getUsers(@RequestParam String username) {
+        return publicService.getUsers(username);
+    }
 
     @GetMapping("/topic")
     public List<TopicDTO> getPublicTopics() {
