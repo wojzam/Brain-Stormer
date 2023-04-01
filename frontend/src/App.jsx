@@ -32,7 +32,7 @@ export default function App() {
               element={<TopicsList isUserTopics={true} />}
             />
             <Route path="/create" element={<Create />} />
-            <Route path="/topic" element={<Topic />} />
+            <Route path="/topic/:id" element={<Topic />} />
           </Routes>
         </main>
       </ThemeProvider>

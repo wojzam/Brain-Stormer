@@ -22,7 +22,7 @@ const Home = () => {
         <Grid item xs={8}>
           <Button
             variant="contained"
-            href="signup"
+            href="/signup"
             color="secondary"
             sx={{
               fontSize: 26,

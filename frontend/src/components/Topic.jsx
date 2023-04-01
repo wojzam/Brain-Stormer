@@ -1,8 +1,8 @@
 import { Link, Box, Typography } from "@mui/material";
 
-export default function Topic({ title, description }) {
+export default function Topic({ id, title, description }) {
   return (
-    <Link href="/topic" color="inherit" underline="none" width="100%">
+    <Link href={`/topic/${id}`} color="inherit" underline="none" width="100%">
       <Box
         sx={{
           my: 2,

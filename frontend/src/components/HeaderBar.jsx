@@ -38,13 +38,13 @@ export default function HeaderBar() {
           Brain Stormer
         </Button>
         <Box display="flex" sx={{ gap: 2 }}>
-          <Button href="explore" sx={buttonStyle}>
+          <Button href="/explore" sx={buttonStyle}>
             Explore
           </Button>
-          <Button href="userTopics" sx={buttonStyle}>
+          <Button href="/userTopics" sx={buttonStyle}>
             My topics
           </Button>
-          <Button href="create" sx={buttonStyle}>
+          <Button href="/create" sx={buttonStyle}>
             Create
           </Button>
         </Box>
@@ -52,7 +52,7 @@ export default function HeaderBar() {
           <Button
             variant="outlined"
             color="inherit"
-            href="login"
+            href="/login"
             sx={loginButtonStyle}
           >
             Login
@@ -60,7 +60,7 @@ export default function HeaderBar() {
           <Button
             variant="contained"
             color="secondary"
-            href="signup"
+            href="/signup"
             sx={signupButtonStyle}
           >
             Sign up
