@@ -4,6 +4,7 @@ import Topic from "../components/Topic";
 import TopicsListControls from "../components/TopicsListControls";
 
 const TopicsList = ({ isUserTopics }) => {
+  const [topics, setTopics] = useState();
   const [sortValue, setSortValue] = useState("");
   const [filterValue, setFilterValue] = useState("");
 
@@ -15,9 +16,15 @@ const TopicsList = ({ isUserTopics }) => {
     setFilterValue(event.target.value);
   };
 
+  useEffect(() => {
+    fetch(isUserTopics ? "/api/topic" : "/api/public/topic")
+      .then((response) => response.json())
+      .then((data) => setTopics(data));
+  }, []);
+
   return (
     <>
-      <Typography component="h1" variant="h1" fontWeight="medium" gutterBottom>
+      <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>
         {isUserTopics ? "My topics" : "Explore"}
       </Typography>
       <TopicsListControls
@@ -26,17 +33,16 @@ const TopicsList = ({ isUserTopics }) => {
         handleSortChange={handleSortChange}
         handleFilterChange={handleFilterChange}
       />
-      <Topic
-        title="Topic 1"
-        description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            laoreet massa non lacinia bibendum. Aenean sollicitudin bibendum
-            nisi. Phasellus sed sollicitudin ipsum. Vivamus id eros eu lacus
-            bibendum pharetra. Phasellus a magna commodo ex sagittis dictum.
-            Duis egestas elit in porttitor lobortis. Maecenas tortor tellus,
-            lobortis non dolor nec, eleifend blandit neque. Aliquam ac
-            ullamcorper lacus, sed faucibus erat."
-      />
-      <Topic title="Topic 2" description="description" />
+      {topics &&
+        topics.map((topic) => (
+          <Topic
+            key={topic.id}
+            id={topic.id}
+            title={topic.title}
+            description={topic.description}
+          />
+        ))}
+      <Topic title="Dummy Topic" description="description" />
     </>
   );
 };

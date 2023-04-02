@@ -11,10 +11,20 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: data.get("username"),
+        email: data.get("email"),
+        password: data.get("password"),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   };
 
   return (

@@ -11,10 +11,19 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    fetch("/api/auth/authenticate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: data.get("username"),
+        password: data.get("password"),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   };
 
   return (

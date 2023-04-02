@@ -1,9 +1,24 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Box, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
 
 const Topic = () => {
+  const { id } = useParams();
+  const [topicData, setTopicData] = useState({
+    title: "",
+    description: "",
+    ideas: [],
+  });
+
+  useEffect(() => {
+    fetch(`/api/public/topic/${id}`)
+      .then((response) => response.json())
+      .then((data) => setTopicData(data));
+  }, []);
+
   return (
     <>
       <BackButton />
@@ -14,7 +29,7 @@ const Topic = () => {
         width="100%"
         my="2em"
       >
-        <Box>
+        <Box width="100%">
           <Box
             display="flex"
             flexDirection="row"
@@ -26,35 +41,21 @@ const Topic = () => {
               fontWeight="regular"
               gutterBottom
             >
-              Topic title
+              {topicData.title}
             </Typography>
             <Typography variant="h5" fontWeight="regular" noWrap>
               Collaborators: 4
             </Typography>
           </Box>
           <Typography variant="h5" fontWeight="regular">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            laoreet massa non lacinia bibendum. Aenean sollicitudin bibendum
-            nisi. Phasellus sed sollicitudin ipsum. Vivamus id eros eu lacus
-            bibendum pharetra. Phasellus a magna commodo ex sagittis dictum.
-            Duis egestas elit in porttitor lobortis. Maecenas tortor tellus,
-            lobortis non dolor nec, eleifend blandit neque. Aliquam ac
-            ullamcorper lacus, sed faucibus erat.
+            {topicData.description}
           </Typography>
         </Box>
       </Box>
-      <Idea title="Test Idea 1" description="description" />
-      <Idea title="Test Idea 2" description="description" />
-      <Idea
-        title="Test Idea 3"
-        description=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
-            laoreet massa non lacinia bibendum. Aenean sollicitudin bibendum
-            nisi. Phasellus sed sollicitudin ipsum. Vivamus id eros eu lacus
-            bibendum pharetra. Phasellus a magna commodo ex sagittis dictum.
-            Duis egestas elit in porttitor lobortis. Maecenas tortor tellus,
-            lobortis non dolor nec, eleifend blandit neque. Aliquam ac
-            ullamcorper lacus, sed faucibus erat."
-      />
+      {topicData.ideas.map((idea) => (
+        <Idea key={idea.id} title={idea.title} description={idea.description} />
+      ))}
+      <Idea title="Dummy Idea" description="description" />
       <Box display="flex" justifyContent="center" width="100%" my="1em">
         <IconButton>
           <AddIcon />
