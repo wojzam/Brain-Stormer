@@ -23,7 +23,10 @@ export default function Login() {
       }),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        localStorage.setItem("token", data.token);
+        window.location.href = `/userTopics`;
+      });
   };
 
   return (
