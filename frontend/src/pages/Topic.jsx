@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, IconButton, Typography, Skeleton } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box, Typography, Skeleton } from "@mui/material";
+
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
+import AddIdeaButton from "../components/AddIdeaButton";
 
 const Topic = () => {
   const { id } = useParams();
   const [topicData, setTopicData] = useState();
   const [isPending, setIsPending] = useState(true);
+  const [ideas, setIdeas] = useState([]);
 
   useEffect(() => {
     fetch(`/api/public/topic/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setTopicData(data);
+        setIdeas(data.ideas);
         setIsPending(false);
       });
   }, []);
@@ -52,9 +55,13 @@ const Topic = () => {
           </Typography>
         </Box>
       </Box>
-      {isPending && <Skeleton height={200} width="100%" />}
-      {topicData &&
-        topicData.ideas.map((idea) => (
+      {isPending ? (
+        <Skeleton height={200} width="100%" />
+      ) : (
+        <AddIdeaButton topicId={topicData.id} setIdeas={setIdeas} />
+      )}
+      {ideas &&
+        ideas.map((idea) => (
           <Idea
             key={idea.id}
             id={idea.id}
@@ -63,15 +70,6 @@ const Topic = () => {
             votes={idea.votes}
           />
         ))}
-      <Idea title="Dummy Idea" description="description" votes={0} />
-      <Box display="flex" justifyContent="center" width="100%" my="1em">
-        <IconButton>
-          <AddIcon />
-          <Typography variant="h5" fontWeight="regular">
-            ADD IDEA
-          </Typography>
-        </IconButton>
-      </Box>
     </>
   );
 };
