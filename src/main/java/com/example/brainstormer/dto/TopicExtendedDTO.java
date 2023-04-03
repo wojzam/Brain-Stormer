@@ -1,9 +1,11 @@
 package com.example.brainstormer.dto;
 
+import com.example.brainstormer.model.Idea;
 import com.example.brainstormer.model.Topic;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ public class TopicExtendedDTO {
         this.publicVisibility = topic.isPublicVisibility();
 
         this.ideas = topic.getIdeas().stream()
+                .sorted(Comparator.comparing(Idea::getCreatedAt).reversed())
                 .map(IdeaDTO::new)
                 .collect(Collectors.toList());
 
