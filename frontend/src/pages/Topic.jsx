@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, Skeleton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
 
 const Topic = () => {
   const { id } = useParams();
-  const [topicData, setTopicData] = useState({
-    title: "",
-    description: "",
-    ideas: [],
-  });
+  const [topicData, setTopicData] = useState();
+  const [isPending, setIsPending] = useState(true);
 
   useEffect(() => {
     fetch(`/api/public/topic/${id}`)
       .then((response) => response.json())
-      .then((data) => setTopicData(data));
+      .then((data) => {
+        setTopicData(data);
+        setIsPending(false);
+      });
   }, []);
 
   return (
@@ -41,21 +41,29 @@ const Topic = () => {
               fontWeight="regular"
               gutterBottom
             >
-              {topicData.title}
+              {isPending ? <Skeleton width={300} /> : topicData.title}
             </Typography>
             <Typography variant="h5" fontWeight="regular" noWrap>
-              Collaborators: 4
+              {isPending ? <Skeleton width={200} /> : "Collaboratos: 4"}
             </Typography>
           </Box>
           <Typography variant="h5" fontWeight="regular">
-            {topicData.description}
+            {isPending ? <Skeleton width={600} /> : topicData.description}
           </Typography>
         </Box>
       </Box>
-      {topicData.ideas.map((idea) => (
-        <Idea key={idea.id} title={idea.title} description={idea.description} />
-      ))}
-      <Idea title="Dummy Idea" description="description" />
+      {isPending && <Skeleton height={200} width="100%" />}
+      {topicData &&
+        topicData.ideas.map((idea) => (
+          <Idea
+            key={idea.id}
+            id={idea.id}
+            title={idea.title}
+            description={idea.description}
+            votes={idea.votes}
+          />
+        ))}
+      <Idea title="Dummy Idea" description="description" votes={0} />
       <Box display="flex" justifyContent="center" width="100%" my="1em">
         <IconButton>
           <AddIcon />

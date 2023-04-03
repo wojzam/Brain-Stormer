@@ -22,14 +22,30 @@ const categories = [
   { label: "Personal Development and Self-Improvement" },
 ];
 
-export default function Create() {
+export default function CreateTopic() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      title: data.get("title"),
-      description: data.get("description"),
-    });
+    const token = localStorage.getItem("token");
+
+    fetch("/api/topic", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: data.get("title"),
+        description: data.get("description"),
+        //TODO get this data from form
+        publicVisibility: "true",
+        categoryName: "BUSINESS",
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = `/topic/${data.id}`;
+      });
   };
 
   return (
@@ -70,6 +86,7 @@ export default function Create() {
               <Autocomplete
                 disablePortal
                 id="category"
+                name="category"
                 options={categories}
                 renderInput={(params) => (
                   <TextField {...params} label="Category" />

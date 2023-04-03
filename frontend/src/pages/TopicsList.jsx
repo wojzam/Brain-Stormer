@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { Typography, CircularProgress } from "@mui/material";
 import Topic from "../components/Topic";
 import TopicsListControls from "../components/TopicsListControls";
 
 const TopicsList = ({ isUserTopics }) => {
   const [topics, setTopics] = useState();
+  const [isPending, setIsPending] = useState(true);
   const [sortValue, setSortValue] = useState("");
   const [filterValue, setFilterValue] = useState("");
 
@@ -17,10 +18,20 @@ const TopicsList = ({ isUserTopics }) => {
   };
 
   useEffect(() => {
-    fetch(isUserTopics ? "/api/topic" : "/api/public/topic")
+    const endpoint = isUserTopics ? "/api/topic" : "/api/public/topic";
+    const token = localStorage.getItem("token");
+
+    fetch(endpoint, {
+      headers: {
+        Authorization: isUserTopics && `Bearer ${token}`,
+      },
+    })
       .then((response) => response.json())
-      .then((data) => setTopics(data));
-  }, []);
+      .then((data) => {
+        setTopics(data);
+        setIsPending(false);
+      });
+  }, [isUserTopics]);
 
   return (
     <>
@@ -33,6 +44,7 @@ const TopicsList = ({ isUserTopics }) => {
         handleSortChange={handleSortChange}
         handleFilterChange={handleFilterChange}
       />
+      {isPending && <CircularProgress />}
       {topics &&
         topics.map((topic) => (
           <Topic
