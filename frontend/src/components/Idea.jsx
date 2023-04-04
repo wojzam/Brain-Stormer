@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Box, IconButton, Typography } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
-import EditIcon from "@mui/icons-material/Edit";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-export default function Idea({ id, title, description, votes }) {
+export default function Idea({ id, title, description, votes, readOnly }) {
   const [likeClicked, setLikeClicked] = useState(false);
   const [dislikeClicked, setDislikeClicked] = useState(false);
   const [localVotes, setLocalVotes] = useState(0);
@@ -84,29 +85,36 @@ export default function Idea({ id, title, description, votes }) {
           {title}
         </Typography>
         <Typography variant="h6">{description}</Typography>
-        <Box display="flex" flexDirection="row" mt="2em">
-          <IconButton
-            color={dislikeClicked ? "secondary" : "default"}
-            onClick={handleDislikeClick}
-          >
-            <ThumbDownOutlinedIcon />
+        {!readOnly && (
+          <Box display="flex" flexDirection="row" mt="2em">
+            <IconButton
+              color={dislikeClicked ? "secondary" : "default"}
+              onClick={handleDislikeClick}
+            >
+              <ThumbDownOutlinedIcon />
+            </IconButton>
+            <Typography variant="h6" color={getVotesColor}>
+              {votes + localVotes}
+            </Typography>
+            <IconButton
+              color={likeClicked ? "secondary" : "default"}
+              onClick={handleLikeClick}
+            >
+              <ThumbUpOutlinedIcon />
+            </IconButton>
+          </Box>
+        )}
+      </Box>
+      {!readOnly && (
+        <Box>
+          <IconButton>
+            <EditOutlinedIcon />
           </IconButton>
-          <Typography variant="h6" color={getVotesColor}>
-            {votes + localVotes}
-          </Typography>
-          <IconButton
-            color={likeClicked ? "secondary" : "default"}
-            onClick={handleLikeClick}
-          >
-            <ThumbUpOutlinedIcon />
+          <IconButton>
+            <DeleteOutlinedIcon />
           </IconButton>
         </Box>
-      </Box>
-      <Box>
-        <IconButton>
-          <EditIcon />
-        </IconButton>
-      </Box>
+      )}
     </Box>
   );
 }

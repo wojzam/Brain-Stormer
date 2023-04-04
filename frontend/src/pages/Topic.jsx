@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Skeleton } from "@mui/material";
-
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
 import AddIdeaButton from "../components/AddIdeaButton";
@@ -13,7 +13,14 @@ const Topic = () => {
   const [ideas, setIdeas] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/public/topic/${id}`)
+    const token = localStorage.getItem("token");
+    const endpoint = token ? `/api/topic/${id}` : `/api/public/topic/${id}`;
+
+    fetch(endpoint, {
+      headers: {
+        Authorization: token && `Bearer ${token}`,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         setTopicData(data);
@@ -33,6 +40,14 @@ const Topic = () => {
         my="2em"
       >
         <Box width="100%">
+          {topicData && topicData.readOnly && (
+            <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+              <LockOutlinedIcon color="disabled" />
+              <Typography variant="h6" fontWeight="light">
+                read-only
+              </Typography>
+            </Box>
+          )}
           <Box
             display="flex"
             flexDirection="row"
@@ -58,7 +73,9 @@ const Topic = () => {
       {isPending ? (
         <Skeleton height={200} width="100%" />
       ) : (
-        <AddIdeaButton topicId={topicData.id} setIdeas={setIdeas} />
+        !topicData.readOnly && (
+          <AddIdeaButton topicId={topicData.id} setIdeas={setIdeas} />
+        )
       )}
       {ideas &&
         ideas.map((idea) => (
@@ -68,6 +85,7 @@ const Topic = () => {
             title={idea.title}
             description={idea.description}
             votes={idea.votes}
+            readOnly={topicData.readOnly}
           />
         ))}
     </>
