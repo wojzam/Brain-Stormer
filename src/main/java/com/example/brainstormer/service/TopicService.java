@@ -37,11 +37,15 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDTO getUserAccessibleTopic(UUID id) {
+    public TopicExtendedDTO getTopic(UUID id) {
         User loggedInUser = authenticationService.getLoggedInUser();
         Topic topic = topicRepository.findById(id).orElseThrow();
+
         if (topic.userAccessDenied(loggedInUser)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            if (!topic.isPublicVisibility()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            return new TopicExtendedDTO(topic, true);
         }
 
         return new TopicExtendedDTO(topic);

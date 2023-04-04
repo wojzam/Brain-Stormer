@@ -52,7 +52,6 @@ public class PublicService {
         if (!topic.isPublicVisibility()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
-        return new TopicExtendedDTO(topic);
+        return new TopicExtendedDTO(topic, true);
     }
 }

@@ -26,8 +26,8 @@ public class TopicController {
     }
 
     @GetMapping(path = "/{topicId}")
-    public TopicExtendedDTO getUserAccessibleTopic(@PathVariable("topicId") UUID id) {
-        return topicService.getUserAccessibleTopic(id);
+    public TopicExtendedDTO getTopic(@PathVariable("topicId") UUID id) {
+        return topicService.getTopic(id);
     }
 
     @PostMapping

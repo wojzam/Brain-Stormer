@@ -18,6 +18,7 @@ public class TopicExtendedDTO {
     private String description;
     private String categoryName;
     private boolean publicVisibility;
+    private boolean previewOnly;
     private List<IdeaDTO> ideas;
     private List<UserDTO> collaborators;
 
@@ -36,5 +37,10 @@ public class TopicExtendedDTO {
         this.collaborators = topic.getCollaborators().stream()
                 .map(UserDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public TopicExtendedDTO(Topic topic, boolean previewOnly) {
+        this(topic);
+        this.previewOnly = previewOnly;
     }
 }

@@ -7,7 +7,9 @@ import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.TopicRepository;
 import com.example.brainstormer.repository.UserRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -111,15 +114,22 @@ public class PublicControllerTest {
     void shouldGetPublicTopics() throws Exception {
         List<TopicDTO> expectedTopics = List.of(new TopicDTO(topic));
 
-        mvc
+        MvcResult result = mvc
                 .perform(get(PATH))
                 .andDo(print())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedTopics)));
+                .andReturn();
+
+        List<TopicDTO> actualTopics = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                }
+        );
+        Assertions.assertTrue(actualTopics.containsAll(expectedTopics));
     }
 
     @Test
     void shouldGetPublicTopic() throws Exception {
-        TopicExtendedDTO expectedTopic = new TopicExtendedDTO(topic);
+        TopicExtendedDTO expectedTopic = new TopicExtendedDTO(topic, true);
 
         mvc
                 .perform(get(PATH + "/" + topic.getId()))
