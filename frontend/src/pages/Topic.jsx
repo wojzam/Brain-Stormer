@@ -85,6 +85,7 @@ const Topic = () => {
             title={idea.title}
             description={idea.description}
             votes={idea.votes}
+            userVote={idea.userVote}
             readOnly={topicData.readOnly}
           />
         ))}

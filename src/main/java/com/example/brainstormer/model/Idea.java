@@ -51,4 +51,12 @@ public class Idea {
     public int sumAllVotes() {
         return votes.stream().mapToInt(Vote::getValue).sum();
     }
+
+    public int getUserVote(User user) {
+        return votes.stream()
+                .filter(vote -> vote.getUser().equals(user))
+                .findFirst()
+                .map(Vote::getValue)
+                .orElse((short) 0);
+    }
 }

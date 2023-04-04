@@ -5,10 +5,27 @@ import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-export default function Idea({ id, title, description, votes, readOnly }) {
-  const [likeClicked, setLikeClicked] = useState(false);
-  const [dislikeClicked, setDislikeClicked] = useState(false);
-  const [localVotes, setLocalVotes] = useState(0);
+export default function Idea({
+  id,
+  title,
+  description,
+  votes,
+  userVote,
+  readOnly,
+}) {
+  const [localVotes, setLocalVotes] = useState(userVote);
+
+  const totalVotes = () => {
+    return votes - userVote + localVotes;
+  };
+
+  const isLiked = () => {
+    return localVotes === 1;
+  };
+
+  const isDisliked = () => {
+    return localVotes === -1;
+  };
 
   const handleVote = (voteValue) => {
     const token = localStorage.getItem("token");
@@ -33,32 +50,25 @@ export default function Idea({ id, title, description, votes, readOnly }) {
   };
 
   const handleLikeClick = () => {
-    if (likeClicked) {
-      setLikeClicked(false);
+    if (isLiked()) {
       deleteVote();
     } else {
-      setLikeClicked(true);
-      setDislikeClicked(false);
       handleVote(1);
     }
   };
 
   const handleDislikeClick = () => {
-    if (dislikeClicked) {
-      setDislikeClicked(false);
+    if (isDisliked()) {
       deleteVote();
     } else {
-      setDislikeClicked(true);
-      setLikeClicked(false);
       handleVote(-1);
     }
   };
 
   const getVotesColor = () => {
-    const sum = votes + localVotes;
-    if (sum > 0) {
+    if (totalVotes() > 0) {
       return "green";
-    } else if (sum < 0) {
+    } else if (totalVotes() < 0) {
       return "red";
     } else {
       return "gray";
@@ -86,18 +96,24 @@ export default function Idea({ id, title, description, votes, readOnly }) {
         </Typography>
         <Typography variant="h6">{description}</Typography>
         {!readOnly && (
-          <Box display="flex" flexDirection="row" mt="2em">
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            width={100}
+            mt="2em"
+          >
             <IconButton
-              color={dislikeClicked ? "secondary" : "default"}
+              color={isDisliked() ? "secondary" : "default"}
               onClick={handleDislikeClick}
             >
               <ThumbDownOutlinedIcon />
             </IconButton>
             <Typography variant="h6" color={getVotesColor}>
-              {votes + localVotes}
+              {totalVotes()}
             </Typography>
             <IconButton
-              color={likeClicked ? "secondary" : "default"}
+              color={isLiked() ? "secondary" : "default"}
               onClick={handleLikeClick}
             >
               <ThumbUpOutlinedIcon />
