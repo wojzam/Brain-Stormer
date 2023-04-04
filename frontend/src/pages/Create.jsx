@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -11,18 +11,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Typography from "@mui/material/Typography";
 import CollaboratorsDialog from "../components/CollaboratorsDialog";
 
-const categories = [
-  { label: "Business" },
-  { label: "Education" },
-  { label: "Science and Technology" },
-  { label: "Health and Medicine" },
-  { label: "Arts and Culture" },
-  { label: "Fashion and Style" },
-  { label: "Home and Design" },
-  { label: "Personal Development and Self-Improvement" },
-];
-
 export default function CreateTopic() {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState();
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -37,9 +29,8 @@ export default function CreateTopic() {
       body: JSON.stringify({
         title: data.get("title"),
         description: data.get("description"),
-        //TODO get this data from form
-        publicVisibility: "true",
-        categoryName: "BUSINESS",
+        publicVisibility: data.get("publicVisibility") === "public",
+        categoryName: selectedCategory.name,
       }),
     })
       .then((response) => response.json())
@@ -47,6 +38,14 @@ export default function CreateTopic() {
         window.location.href = `/topic/${data.id}`;
       });
   };
+
+  useEffect(() => {
+    fetch("/api/public/category")
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data);
+      });
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -86,8 +85,8 @@ export default function CreateTopic() {
               <Autocomplete
                 disablePortal
                 id="category"
-                name="category"
                 options={categories}
+                onChange={(event, value) => setSelectedCategory(value)}
                 renderInput={(params) => (
                   <TextField {...params} label="Category" />
                 )}
@@ -95,9 +94,9 @@ export default function CreateTopic() {
             </Grid>
             <Grid item xs={12}>
               <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
+                aria-labelledby="radio-buttons-group-label"
                 defaultValue="private"
-                name="radio-buttons-group"
+                name="publicVisibility"
                 row
               >
                 <FormControlLabel
