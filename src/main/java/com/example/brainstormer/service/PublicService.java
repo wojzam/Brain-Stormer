@@ -1,5 +1,6 @@
 package com.example.brainstormer.service;
 
+import com.example.brainstormer.dto.CategoryDTO;
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
 import com.example.brainstormer.dto.UserDTO;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,14 +31,10 @@ public class PublicService {
                 .collect(Collectors.toList());
     }
 
-    public LinkedHashMap<String, String> getCategoriesNames() {
+    public List<CategoryDTO> getCategories() {
         return Arrays.stream(Category.values())
-                .collect(Collectors.toMap(
-                        Category::name,
-                        Category::toString,
-                        (v1, v2) -> v1,
-                        LinkedHashMap::new
-                ));
+                .map(CategoryDTO::new)
+                .collect(Collectors.toList());
     }
 
     public List<TopicDTO> getPublicTopics() {

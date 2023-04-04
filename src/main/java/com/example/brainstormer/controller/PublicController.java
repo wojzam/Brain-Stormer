@@ -1,5 +1,6 @@
 package com.example.brainstormer.controller;
 
+import com.example.brainstormer.dto.CategoryDTO;
 import com.example.brainstormer.dto.TopicDTO;
 import com.example.brainstormer.dto.TopicExtendedDTO;
 import com.example.brainstormer.dto.UserDTO;
@@ -7,7 +8,6 @@ import com.example.brainstormer.service.PublicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +24,8 @@ public class PublicController {
     }
 
     @GetMapping("/category")
-    public LinkedHashMap<String, String> getCategories() {
-        return publicService.getCategoriesNames();
+    public List<CategoryDTO> getCategories() {
+        return publicService.getCategories();
     }
 
     @GetMapping("/topic")
