@@ -1,7 +1,6 @@
 package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.TopicDto;
-import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.service.PublicService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class PublicController {
     }
 
     @GetMapping(path = "/topic/{topicId}")
-    public TopicExtendedDto getPublicTopic(@PathVariable("topicId") UUID id) {
+    public TopicDto getPublicTopic(@PathVariable("topicId") UUID id) {
         return publicService.getPublicTopic(id);
     }
 

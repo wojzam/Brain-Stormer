@@ -57,11 +57,12 @@ public class TopicControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     private Topic topic;
+    private User user;
     private String token;
 
     @BeforeEach
     void setUp() {
-        User user = userRepository.save(
+        user = userRepository.save(
                 User.builder()
                         .username(USERNAME)
                         .email(EMAIL)
@@ -170,7 +171,7 @@ public class TopicControllerTest {
 
     @Test
     void shouldGetUserAccessibleTopic() throws Exception {
-        TopicExtendedDto expectedTopic = new TopicExtendedDto(topic);
+        TopicExtendedDto expectedTopic = new TopicExtendedDto(topic, user);
 
         mvc
                 .perform(requestWithJwtTokenHeader(get(PATH + "/" + topic.getId())))

@@ -2,7 +2,6 @@ package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDto;
-import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.service.TopicService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +25,7 @@ public class TopicController {
     }
 
     @GetMapping(path = "/{topicId}")
-    public TopicExtendedDto getTopic(@PathVariable("topicId") UUID id) {
+    public TopicDto getTopic(@PathVariable("topicId") UUID id) {
         return topicService.getTopic(id);
     }
 

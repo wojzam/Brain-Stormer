@@ -3,6 +3,7 @@ package com.example.brainstormer.service;
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.dto.TopicReadOnlyDto;
 import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -37,7 +38,7 @@ public class TopicService {
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDto getTopic(UUID id) {
+    public TopicDto getTopic(UUID id) {
         User loggedInUser = authenticationService.getLoggedInUser();
         Topic topic = topicRepository.findById(id).orElseThrow();
 
@@ -45,10 +46,10 @@ public class TopicService {
             if (!topic.isPublicVisibility()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            return new TopicExtendedDto(topic, true);
+            return new TopicReadOnlyDto(topic);
         }
 
-        return new TopicExtendedDto(topic);
+        return new TopicExtendedDto(topic, loggedInUser);
     }
 
     public ResponseEntity<TopicDto> createTopic(TopicCreateRequest request) {

@@ -1,7 +1,7 @@
 package com.example.brainstormer;
 
 import com.example.brainstormer.dto.TopicDto;
-import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.dto.TopicReadOnlyDto;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -129,7 +129,7 @@ public class PublicControllerTest {
 
     @Test
     void shouldGetPublicTopic() throws Exception {
-        TopicExtendedDto expectedTopic = new TopicExtendedDto(topic, true);
+        TopicReadOnlyDto expectedTopic = new TopicReadOnlyDto(topic);
 
         mvc
                 .perform(get(PATH + "/" + topic.getId()))

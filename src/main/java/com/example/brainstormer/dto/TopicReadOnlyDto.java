@@ -2,7 +2,6 @@ package com.example.brainstormer.dto;
 
 import com.example.brainstormer.model.Idea;
 import com.example.brainstormer.model.Topic;
-import com.example.brainstormer.model.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,15 +13,17 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class TopicExtendedDto extends TopicDto {
+public class TopicReadOnlyDto extends TopicDto {
+    private boolean readOnly = true;
     private List<IdeaDto> ideas;
     private List<UserDto> collaborators;
 
-    public TopicExtendedDto(Topic topic, User user) {
+    public TopicReadOnlyDto(Topic topic) {
         super(topic);
+
         this.ideas = topic.getIdeas().stream()
                 .sorted(Comparator.comparing(Idea::getCreatedAt).reversed())
-                .map(idea -> new IdeaDto(idea, user))
+                .map(IdeaDto::new)
                 .collect(Collectors.toList());
 
         this.collaborators = topic.getCollaborators().stream()

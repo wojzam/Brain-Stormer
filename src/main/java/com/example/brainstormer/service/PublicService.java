@@ -1,7 +1,7 @@
 package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.TopicDto;
-import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.dto.TopicReadOnlyDto;
 import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
@@ -42,11 +42,11 @@ public class PublicService {
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDto getPublicTopic(UUID id) {
+    public TopicDto getPublicTopic(UUID id) {
         Topic topic = topicRepository.findById(id).orElseThrow();
         if (!topic.isPublicVisibility()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return new TopicExtendedDto(topic, true);
+        return new TopicReadOnlyDto(topic);
     }
 }
