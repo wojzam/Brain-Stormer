@@ -18,7 +18,7 @@ public class TopicExtendedDTO {
     private String description;
     private String categoryName;
     private boolean publicVisibility;
-    private boolean previewOnly;
+    private boolean readOnly;
     private List<IdeaDTO> ideas;
     private List<UserDTO> collaborators;
 
@@ -39,8 +39,8 @@ public class TopicExtendedDTO {
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDTO(Topic topic, boolean previewOnly) {
+    public TopicExtendedDTO(Topic topic, boolean readOnly) {
         this(topic);
-        this.previewOnly = previewOnly;
+        this.readOnly = readOnly;
     }
 }
