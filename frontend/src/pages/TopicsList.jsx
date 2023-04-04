@@ -31,7 +31,7 @@ const TopicsList = ({ isUserTopics }) => {
         setTopics(data);
         setIsPending(false);
       });
-  }, [isUserTopics]);
+  }, []);
 
   return (
     <>
@@ -52,9 +52,9 @@ const TopicsList = ({ isUserTopics }) => {
             id={topic.id}
             title={topic.title}
             description={topic.description}
+            category={topic.category}
           />
         ))}
-      <Topic title="Dummy Topic" description="description" />
     </>
   );
 };

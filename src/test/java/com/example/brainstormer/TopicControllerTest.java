@@ -3,7 +3,6 @@ package com.example.brainstormer;
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.dto.TopicExtendedDto;
-import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -89,7 +88,7 @@ public class TopicControllerTest {
     }
 
     private String topicCreateRequest() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.name(), false));
+        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.toString(), false));
     }
 
     @Test
@@ -128,9 +127,9 @@ public class TopicControllerTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"abc", "category", ""})
-    void shouldReturnBadRequest_whenCategoryIsInvalid(String invalidCategoryName) throws Exception {
+    void shouldReturnBadRequest_whenCategoryIsInvalid(String invalidCategoryLabel) throws Exception {
         String topicCreateRequest = objectMapper.writeValueAsString(
-                new TopicCreateRequest(TITLE, DESCRIPTION, invalidCategoryName, false)
+                new TopicCreateRequest(TITLE, DESCRIPTION, invalidCategoryLabel, false)
         );
 
         mvc
@@ -196,10 +195,10 @@ public class TopicControllerTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"BUSINESS", "EDUCATION", "LIFESTYLE", "SCIENCE_AND_TECHNOLOGY"})
-    void shouldCreateTopicWithCorrectCategory(String categoryName) throws Exception {
+    @ValueSource(strings = {"Business", "Education", "Lifestyle", "Science and Technology"})
+    void shouldCreateTopicWithCorrectCategory(String categoryLabel) throws Exception {
         String topicCreateRequest = objectMapper.writeValueAsString(
-                new TopicCreateRequest(TITLE, DESCRIPTION, categoryName, false)
+                new TopicCreateRequest(TITLE, DESCRIPTION, categoryLabel, false)
         );
 
         MvcResult result = mvc
@@ -214,7 +213,7 @@ public class TopicControllerTest {
                 TopicDto.class
         ).getId();
         Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
-        assertEquals(Category.valueOf(categoryName), createdTopic.getCategory());
+        assertEquals(categoryLabel, createdTopic.getCategory().toString());
     }
 
     @Test

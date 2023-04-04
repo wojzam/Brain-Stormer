@@ -1,6 +1,5 @@
 package com.example.brainstormer.controller;
 
-import com.example.brainstormer.dto.CategoryDto;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.dto.UserDto;
@@ -24,7 +23,7 @@ public class PublicController {
     }
 
     @GetMapping("/category")
-    public List<CategoryDto> getCategories() {
+    public List<String> getCategories() {
         return publicService.getCategories();
     }
 

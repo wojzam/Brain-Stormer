@@ -30,7 +30,7 @@ export default function CreateTopic() {
         title: data.get("title"),
         description: data.get("description"),
         publicVisibility: data.get("publicVisibility") === "public",
-        categoryName: selectedCategory.name,
+        category: selectedCategory,
       }),
     })
       .then((response) => response.json())

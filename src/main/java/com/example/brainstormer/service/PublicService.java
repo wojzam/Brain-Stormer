@@ -1,6 +1,5 @@
 package com.example.brainstormer.service;
 
-import com.example.brainstormer.dto.CategoryDto;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.dto.UserDto;
@@ -31,9 +30,9 @@ public class PublicService {
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryDto> getCategories() {
+    public List<String> getCategories() {
         return Arrays.stream(Category.values())
-                .map(CategoryDto::new)
+                .map(Category::toString)
                 .collect(Collectors.toList());
     }
 

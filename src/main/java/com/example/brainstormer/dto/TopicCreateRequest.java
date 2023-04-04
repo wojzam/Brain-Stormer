@@ -11,14 +11,14 @@ public class TopicCreateRequest {
     @NotBlank(message = "Title is required")
     private String title;
     private String description;
-    @NotBlank(message = "Category name is required")
-    private String categoryName;
+    @NotBlank(message = "Category is required")
+    private String category;
     private Boolean publicVisibility;
 
-    public TopicCreateRequest(String title, String description, String categoryName, Boolean publicVisibility) {
+    public TopicCreateRequest(String title, String description, String category, Boolean publicVisibility) {
         this.title = title;
         this.description = description;
-        this.categoryName = categoryName.toUpperCase();
+        this.category = category;
         this.publicVisibility = publicVisibility != null ? publicVisibility : false;
     }
 }

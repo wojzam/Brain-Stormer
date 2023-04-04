@@ -56,7 +56,7 @@ public class TopicService {
         Topic topic = Topic.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .category(Category.parseCategoryName(request.getCategoryName()))
+                .category(Category.getCategoryByLabel(request.getCategory()))
                 .publicVisibility(request.getPublicVisibility())
                 .creator(loggedInUser)
                 .build();

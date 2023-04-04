@@ -26,12 +26,13 @@ public enum Category {
         this.label = label;
     }
 
-    public static Category parseCategoryName(String categoryName) {
-        try {
-            return Category.valueOf(categoryName);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unrecognized topic category name");
+    public static Category getCategoryByLabel(String label) {
+        for (Category category : Category.values()) {
+            if (category.label.equals(label)) {
+                return category;
+            }
         }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unrecognized topic category label");
     }
 
     @Override

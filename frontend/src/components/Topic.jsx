@@ -1,6 +1,6 @@
 import { Link, Box, Typography } from "@mui/material";
 
-export default function Topic({ id, title, description }) {
+export default function Topic({ id, title, description, category }) {
   return (
     <Link href={`/topic/${id}`} color="inherit" underline="none" width="100%">
       <Box
@@ -19,9 +19,14 @@ export default function Topic({ id, title, description }) {
           },
         }}
       >
-        <Typography component="h2" variant="h4" fontWeight="medium">
-          {title}
-        </Typography>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Typography component="h2" variant="h4" fontWeight="medium">
+            {title}
+          </Typography>
+          <Typography variant="h6" fontWeight="light">
+            {category}
+          </Typography>
+        </Box>
         <Typography variant="h6">{description}</Typography>
       </Box>
     </Link>
