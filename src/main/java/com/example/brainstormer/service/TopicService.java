@@ -1,8 +1,8 @@
 package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.TopicCreateRequest;
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -27,17 +27,17 @@ public class TopicService {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
 
-    public List<TopicDTO> getUserAccessibleTopics() {
+    public List<TopicDto> getUserAccessibleTopics() {
         User loggedInUser = authenticationService.getLoggedInUser();
         return topicRepository.findAllByCreatorOrCollaboratorsContainingOrderByCreatedAtDesc(
                         loggedInUser,
                         loggedInUser
                 ).stream()
-                .map(TopicDTO::new)
+                .map(TopicDto::new)
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDTO getTopic(UUID id) {
+    public TopicExtendedDto getTopic(UUID id) {
         User loggedInUser = authenticationService.getLoggedInUser();
         Topic topic = topicRepository.findById(id).orElseThrow();
 
@@ -45,13 +45,13 @@ public class TopicService {
             if (!topic.isPublicVisibility()) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
-            return new TopicExtendedDTO(topic, true);
+            return new TopicExtendedDto(topic, true);
         }
 
-        return new TopicExtendedDTO(topic);
+        return new TopicExtendedDto(topic);
     }
 
-    public ResponseEntity<TopicDTO> createTopic(TopicCreateRequest request) {
+    public ResponseEntity<TopicDto> createTopic(TopicCreateRequest request) {
         User loggedInUser = authenticationService.getLoggedInUser();
         Topic topic = Topic.builder()
                 .title(request.getTitle())
@@ -62,7 +62,7 @@ public class TopicService {
                 .build();
 
         topicRepository.save(topic);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TopicDTO(topic));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TopicDto(topic));
     }
 
     @Transactional

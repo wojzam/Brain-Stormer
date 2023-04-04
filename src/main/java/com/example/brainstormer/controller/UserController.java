@@ -1,7 +1,7 @@
 package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.UpdatePasswordRequest;
-import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public UserDTO getUser() {
+    public UserDto getUser() {
         return userService.getUser();
     }
 

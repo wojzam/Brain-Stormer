@@ -1,7 +1,7 @@
 package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.UpdatePasswordRequest;
-import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,8 +19,8 @@ public class UserService {
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserDTO getUser() {
-        return new UserDTO(authenticationService.getLoggedInUser());
+    public UserDto getUser() {
+        return new UserDto(authenticationService.getLoggedInUser());
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package com.example.brainstormer;
 
 import com.example.brainstormer.dto.IdeaCreateRequest;
-import com.example.brainstormer.dto.IdeaDTO;
+import com.example.brainstormer.dto.IdeaDto;
 import com.example.brainstormer.model.Idea;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
@@ -180,7 +180,7 @@ public class IdeaControllerTest {
 
     @Test
     void shouldGetIdea() throws Exception {
-        IdeaDTO expectedIdea = new IdeaDTO(idea);
+        IdeaDto expectedIdea = new IdeaDto(idea);
 
         mvc
                 .perform(requestWithJwtTokenHeader(get(PATH + "/" + idea.getId())))
@@ -197,9 +197,9 @@ public class IdeaControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        IdeaDTO createdIdea = objectMapper.readValue(
+        IdeaDto createdIdea = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                IdeaDTO.class
+                IdeaDto.class
         );
         assertTrue(ideaRepository.findById(createdIdea.getId()).isPresent());
     }

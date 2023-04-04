@@ -1,7 +1,7 @@
 package com.example.brainstormer;
 
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -112,14 +112,14 @@ public class PublicControllerTest {
 
     @Test
     void shouldGetPublicTopics() throws Exception {
-        List<TopicDTO> expectedTopics = List.of(new TopicDTO(topic));
+        List<TopicDto> expectedTopics = List.of(new TopicDto(topic));
 
         MvcResult result = mvc
                 .perform(get(PATH))
                 .andDo(print())
                 .andReturn();
 
-        List<TopicDTO> actualTopics = objectMapper.readValue(
+        List<TopicDto> actualTopics = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {
                 }
@@ -129,7 +129,7 @@ public class PublicControllerTest {
 
     @Test
     void shouldGetPublicTopic() throws Exception {
-        TopicExtendedDTO expectedTopic = new TopicExtendedDTO(topic, true);
+        TopicExtendedDto expectedTopic = new TopicExtendedDto(topic, true);
 
         mvc
                 .perform(get(PATH + "/" + topic.getId()))

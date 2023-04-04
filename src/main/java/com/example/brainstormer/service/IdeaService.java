@@ -1,7 +1,7 @@
 package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.IdeaCreateRequest;
-import com.example.brainstormer.dto.IdeaDTO;
+import com.example.brainstormer.dto.IdeaDto;
 import com.example.brainstormer.model.Idea;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -28,7 +28,7 @@ public class IdeaService {
     private final VoteRepository voteRepository;
     private final AuthenticationService authenticationService;
 
-    public ResponseEntity<IdeaDTO> createIdea(IdeaCreateRequest request) {
+    public ResponseEntity<IdeaDto> createIdea(IdeaCreateRequest request) {
         User loggedInUser = authenticationService.getLoggedInUser();
         Topic topic = topicRepository.findById(request.getTopicId()).orElseThrow();
 
@@ -44,11 +44,11 @@ public class IdeaService {
                 .build();
 
         ideaRepository.save(idea);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new IdeaDTO(idea));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new IdeaDto(idea));
     }
 
-    public IdeaDTO getIdea(UUID id) {
-        return new IdeaDTO(ideaRepository.findById(id).orElseThrow());
+    public IdeaDto getIdea(UUID id) {
+        return new IdeaDto(ideaRepository.findById(id).orElseThrow());
     }
 
     @Transactional

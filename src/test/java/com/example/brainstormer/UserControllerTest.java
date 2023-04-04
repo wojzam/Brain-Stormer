@@ -1,7 +1,7 @@
 package com.example.brainstormer;
 
 import com.example.brainstormer.dto.UpdatePasswordRequest;
-import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.repository.UserRepository;
@@ -106,7 +106,7 @@ public class UserControllerTest {
 
     @Test
     void shouldGetUser() throws Exception {
-        UserDTO expectedUser = new UserDTO(user);
+        UserDto expectedUser = new UserDto(user);
 
         mvc
                 .perform(requestWithJwtTokenHeader(get(PATH)))

@@ -1,9 +1,9 @@
 package com.example.brainstormer.controller;
 
-import com.example.brainstormer.dto.CategoryDTO;
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
-import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.dto.CategoryDto;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.service.PublicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +19,22 @@ public class PublicController {
     private final PublicService publicService;
 
     @GetMapping("/user")
-    public List<UserDTO> getUsers(@RequestParam String username) {
+    public List<UserDto> getUsers(@RequestParam String username) {
         return publicService.getUsers(username);
     }
 
     @GetMapping("/category")
-    public List<CategoryDTO> getCategories() {
+    public List<CategoryDto> getCategories() {
         return publicService.getCategories();
     }
 
     @GetMapping("/topic")
-    public List<TopicDTO> getPublicTopics() {
+    public List<TopicDto> getPublicTopics() {
         return publicService.getPublicTopics();
     }
 
     @GetMapping(path = "/topic/{topicId}")
-    public TopicExtendedDTO getPublicTopic(@PathVariable("topicId") UUID id) {
+    public TopicExtendedDto getPublicTopic(@PathVariable("topicId") UUID id) {
         return publicService.getPublicTopic(id);
     }
 

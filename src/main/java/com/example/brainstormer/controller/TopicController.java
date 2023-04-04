@@ -1,8 +1,8 @@
 package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.TopicCreateRequest;
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.service.TopicService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -21,17 +21,17 @@ public class TopicController {
     private final TopicService topicService;
 
     @GetMapping
-    public List<TopicDTO> getUserAccessibleTopics() {
+    public List<TopicDto> getUserAccessibleTopics() {
         return topicService.getUserAccessibleTopics();
     }
 
     @GetMapping(path = "/{topicId}")
-    public TopicExtendedDTO getTopic(@PathVariable("topicId") UUID id) {
+    public TopicExtendedDto getTopic(@PathVariable("topicId") UUID id) {
         return topicService.getTopic(id);
     }
 
     @PostMapping
-    public ResponseEntity<TopicDTO> createTopic(@Valid @RequestBody TopicCreateRequest request) {
+    public ResponseEntity<TopicDto> createTopic(@Valid @RequestBody TopicCreateRequest request) {
         return topicService.createTopic(request);
     }
 

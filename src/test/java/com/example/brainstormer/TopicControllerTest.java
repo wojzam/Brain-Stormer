@@ -1,8 +1,8 @@
 package com.example.brainstormer;
 
 import com.example.brainstormer.dto.TopicCreateRequest;
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
 import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
@@ -161,7 +161,7 @@ public class TopicControllerTest {
 
     @Test
     void shouldGetUserAccessibleTopics() throws Exception {
-        List<TopicDTO> expectedTopics = List.of(new TopicDTO(topic));
+        List<TopicDto> expectedTopics = List.of(new TopicDto(topic));
 
         mvc
                 .perform(requestWithJwtTokenHeader(get(PATH)))
@@ -171,7 +171,7 @@ public class TopicControllerTest {
 
     @Test
     void shouldGetUserAccessibleTopic() throws Exception {
-        TopicExtendedDTO expectedTopic = new TopicExtendedDTO(topic);
+        TopicExtendedDto expectedTopic = new TopicExtendedDto(topic);
 
         mvc
                 .perform(requestWithJwtTokenHeader(get(PATH + "/" + topic.getId())))
@@ -190,7 +190,7 @@ public class TopicControllerTest {
 
         UUID topicID = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                TopicDTO.class
+                TopicDto.class
         ).getId();
         assertTrue(topicRepository.findById(topicID).isPresent());
     }
@@ -211,7 +211,7 @@ public class TopicControllerTest {
 
         UUID topicID = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                TopicDTO.class
+                TopicDto.class
         ).getId();
         Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
         assertEquals(Category.valueOf(categoryName), createdTopic.getCategory());

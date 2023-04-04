@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class CategoryDTO {
+public class CategoryDto {
     private String name;
     private String label;
 
-    public CategoryDTO(Category category) {
+    public CategoryDto(Category category) {
         name = category.name();
         label = category.toString();
     }

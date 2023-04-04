@@ -1,7 +1,7 @@
 package com.example.brainstormer.controller;
 
 import com.example.brainstormer.dto.IdeaCreateRequest;
-import com.example.brainstormer.dto.IdeaDTO;
+import com.example.brainstormer.dto.IdeaDto;
 import com.example.brainstormer.service.IdeaService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -22,12 +22,12 @@ public class IdeaController {
     private final IdeaService ideaService;
 
     @PostMapping
-    public ResponseEntity<IdeaDTO> createIdea(@Valid @RequestBody IdeaCreateRequest request) {
+    public ResponseEntity<IdeaDto> createIdea(@Valid @RequestBody IdeaCreateRequest request) {
         return ideaService.createIdea(request);
     }
 
     @GetMapping(path = "/{ideaId}")
-    public IdeaDTO getIdea(@PathVariable("ideaId") UUID id) {
+    public IdeaDto getIdea(@PathVariable("ideaId") UUID id) {
         return ideaService.getIdea(id);
     }
 

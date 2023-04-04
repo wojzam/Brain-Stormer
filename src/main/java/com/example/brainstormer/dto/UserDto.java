@@ -8,12 +8,12 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class UserDTO {
+public class UserDto {
 
     private UUID id;
     private String username;
 
-    public UserDTO(User user) {
+    public UserDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
     }

@@ -8,13 +8,13 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class TopicDTO {
+public class TopicDto {
     private UUID id;
     private String title;
     private String description;
     private String categoryName;
 
-    public TopicDTO(Topic topic) {
+    public TopicDto(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
         this.description = topic.getDescription();

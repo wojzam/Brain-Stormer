@@ -1,9 +1,9 @@
 package com.example.brainstormer.service;
 
-import com.example.brainstormer.dto.CategoryDTO;
-import com.example.brainstormer.dto.TopicDTO;
-import com.example.brainstormer.dto.TopicExtendedDTO;
-import com.example.brainstormer.dto.UserDTO;
+import com.example.brainstormer.dto.CategoryDto;
+import com.example.brainstormer.dto.TopicDto;
+import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.dto.UserDto;
 import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.repository.TopicRepository;
@@ -25,29 +25,29 @@ public class PublicService {
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
 
-    public List<UserDTO> getUsers(String username) {
+    public List<UserDto> getUsers(String username) {
         return userRepository.findAllByUsernameContainingIgnoreCase(username).stream()
-                .map(UserDTO::new)
+                .map(UserDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<CategoryDTO> getCategories() {
+    public List<CategoryDto> getCategories() {
         return Arrays.stream(Category.values())
-                .map(CategoryDTO::new)
+                .map(CategoryDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<TopicDTO> getPublicTopics() {
+    public List<TopicDto> getPublicTopics() {
         return topicRepository.findAllByPublicVisibilityIsTrueOrderByCreatedAtDesc().stream()
-                .map(TopicDTO::new)
+                .map(TopicDto::new)
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDTO getPublicTopic(UUID id) {
+    public TopicExtendedDto getPublicTopic(UUID id) {
         Topic topic = topicRepository.findById(id).orElseThrow();
         if (!topic.isPublicVisibility()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return new TopicExtendedDTO(topic, true);
+        return new TopicExtendedDto(topic, true);
     }
 }

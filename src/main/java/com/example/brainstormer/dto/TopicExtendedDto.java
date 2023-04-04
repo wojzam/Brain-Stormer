@@ -12,17 +12,17 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
-public class TopicExtendedDTO {
+public class TopicExtendedDto {
     private UUID id;
     private String title;
     private String description;
     private String categoryName;
     private boolean publicVisibility;
     private boolean readOnly;
-    private List<IdeaDTO> ideas;
-    private List<UserDTO> collaborators;
+    private List<IdeaDto> ideas;
+    private List<UserDto> collaborators;
 
-    public TopicExtendedDTO(Topic topic) {
+    public TopicExtendedDto(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
         this.description = topic.getDescription();
@@ -31,15 +31,15 @@ public class TopicExtendedDTO {
 
         this.ideas = topic.getIdeas().stream()
                 .sorted(Comparator.comparing(Idea::getCreatedAt).reversed())
-                .map(IdeaDTO::new)
+                .map(IdeaDto::new)
                 .collect(Collectors.toList());
 
         this.collaborators = topic.getCollaborators().stream()
-                .map(UserDTO::new)
+                .map(UserDto::new)
                 .collect(Collectors.toList());
     }
 
-    public TopicExtendedDTO(Topic topic, boolean readOnly) {
+    public TopicExtendedDto(Topic topic, boolean readOnly) {
         this(topic);
         this.readOnly = readOnly;
     }
