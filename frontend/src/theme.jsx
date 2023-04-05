@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from "react";
+import { createContext, useState, useEffect, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
 import { teal } from "@mui/material/colors";
 
@@ -51,7 +51,11 @@ export const ColorModeContext = createContext({
 });
 
 export const useMode = () => {
-  const [mode, setMode] = useState("light");
+  const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
+
+  useEffect(() => {
+    localStorage.setItem("mode", mode);
+  }, [mode]);
 
   const colorMode = useMemo(
     () => ({
