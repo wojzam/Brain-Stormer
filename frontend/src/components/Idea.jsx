@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import { VotePanel } from "./VotePanel";
+import { IdeaForm } from "./IdeaForm";
 
 export default function Idea({
   id,
@@ -12,125 +12,69 @@ export default function Idea({
   votes,
   userVote,
   readOnly,
+  setIdeas,
 }) {
-  const [localVotes, setLocalVotes] = useState(userVote);
+  const [isFormVisible, setIsFormVisible] = useState(false);
   const theme = useTheme();
 
-  const totalVotes = () => {
-    return votes - userVote + localVotes;
+  const handleEditClick = () => {
+    setIsFormVisible(true);
   };
 
-  const isLiked = () => {
-    return localVotes === 1;
-  };
-
-  const isDisliked = () => {
-    return localVotes === -1;
-  };
-
-  const handleVote = (voteValue) => {
+  const handleDeleteClick = () => {
     const token = localStorage.getItem("token");
-    fetch(`/api/idea/${id}/vote?value=${voteValue}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(() => setLocalVotes(voteValue));
-  };
-
-  const deleteVote = () => {
-    const token = localStorage.getItem("token");
-    fetch(`/api/idea/${id}/vote`, {
+    fetch(`/api/idea/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }).then(() => setLocalVotes(0));
-  };
-
-  const handleLikeClick = () => {
-    if (isLiked()) {
-      deleteVote();
-    } else {
-      handleVote(1);
-    }
-  };
-
-  const handleDislikeClick = () => {
-    if (isDisliked()) {
-      deleteVote();
-    } else {
-      handleVote(-1);
-    }
-  };
-
-  const getVotesColor = () => {
-    if (totalVotes() > 0) {
-      return "green";
-    } else if (totalVotes() < 0) {
-      return "red";
-    } else {
-      return "gray";
-    }
+    }).then(() => {
+      setIdeas((ideas) => ideas.filter((idea) => idea.id !== id));
+    });
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="space-between"
-      sx={{
-        width: "100%",
-        my: 2,
-        px: 5,
-        py: 2,
-        border: "solid",
-        borderColor: theme.palette.neutral.main,
-        borderRadius: 8,
-      }}
-    >
-      <Box>
-        <Typography component="h2" variant="h4" fontWeight="medium">
-          {title}
-        </Typography>
-        <Typography variant="h6">{description}</Typography>
-        {!readOnly && (
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            width={100}
-            mt="2em"
-          >
-            <IconButton
-              color={isDisliked() ? "secondary" : "default"}
-              onClick={handleDislikeClick}
-            >
-              <ThumbDownOutlinedIcon />
-            </IconButton>
-            <Typography variant="h6" color={getVotesColor}>
-              {totalVotes()}
+    <>
+      {isFormVisible ? (
+        <IdeaForm
+          mode="edit"
+          {...{ id, title, description, setIsFormVisible, setIdeas }}
+        />
+      ) : (
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          sx={{
+            width: "100%",
+            my: 2,
+            px: 5,
+            py: 3,
+            border: "solid",
+            borderColor: theme.palette.neutral.main,
+            borderRadius: 8,
+          }}
+        >
+          <Box>
+            <Typography component="h2" variant="h4" fontWeight="medium">
+              {title}
             </Typography>
-            <IconButton
-              color={isLiked() ? "secondary" : "default"}
-              onClick={handleLikeClick}
-            >
-              <ThumbUpOutlinedIcon />
-            </IconButton>
+            <Typography variant="h6">{description}</Typography>
+            {!readOnly && <VotePanel {...{ id, votes, userVote }} />}
           </Box>
-        )}
-      </Box>
-      {!readOnly && (
-        <Box>
-          <IconButton>
-            <EditOutlinedIcon />
-          </IconButton>
-          <IconButton>
-            <DeleteOutlinedIcon />
-          </IconButton>
+
+          {!readOnly && (
+            <Box>
+              <IconButton onClick={handleEditClick}>
+                <EditOutlinedIcon />
+              </IconButton>
+              <IconButton onClick={handleDeleteClick}>
+                <DeleteOutlinedIcon />
+              </IconButton>
+            </Box>
+          )}
         </Box>
       )}
-    </Box>
+    </>
   );
 }
