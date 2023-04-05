@@ -45,16 +45,7 @@ const TopicsList = ({ isUserTopics }) => {
         handleFilterChange={handleFilterChange}
       />
       {isPending && <CircularProgress />}
-      {topics &&
-        topics.map((topic) => (
-          <Topic
-            key={topic.id}
-            id={topic.id}
-            title={topic.title}
-            description={topic.description}
-            category={topic.category}
-          />
-        ))}
+      {topics && topics.map((topic) => <Topic key={topic.id} {...topic} />)}
     </>
   );
 };

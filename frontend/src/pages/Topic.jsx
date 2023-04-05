@@ -23,7 +23,6 @@ const Topic = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setTopicData(data);
         setIdeas(data.ideas);
         setIsPending(false);
@@ -86,12 +85,9 @@ const Topic = () => {
         ideas.map((idea) => (
           <Idea
             key={idea.id}
-            id={idea.id}
-            title={idea.title}
-            description={idea.description}
-            votes={idea.votes}
-            userVote={idea.userVote}
+            {...idea}
             readOnly={topicData.readOnly}
+            setIdeas={setIdeas}
           />
         ))}
     </>
