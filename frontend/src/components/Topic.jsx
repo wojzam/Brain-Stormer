@@ -1,6 +1,7 @@
-import { Link, Box, Typography } from "@mui/material";
+import { Link, Box, Typography, useTheme } from "@mui/material";
 
 export default function Topic({ id, title, description, category }) {
+  const theme = useTheme();
   return (
     <Link href={`/topic/${id}`} color="inherit" underline="none" width="100%">
       <Box
@@ -11,10 +12,10 @@ export default function Topic({ id, title, description, category }) {
           border: "solid",
           borderColor: "transparent",
           borderRadius: 8,
-          background: "#ededed",
+          background: theme.palette.neutral.main,
           boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.16)",
           "&:hover": {
-            background: "#dedede",
+            background: theme.palette.neutral.darker,
             borderColor: "#d1d1d1",
           },
         }}

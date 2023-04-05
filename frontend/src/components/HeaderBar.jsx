@@ -5,11 +5,13 @@ const homeButtonStyle = {
   textTransform: "none",
   fontSize: 20,
   color: "white",
+  whiteSpace: "nowrap",
 };
 
 const buttonStyle = {
   fontSize: 16,
   color: "white",
+  whiteSpace: "nowrap",
 };
 
 const loginButtonStyle = {
@@ -23,7 +25,6 @@ const signupButtonStyle = {
   borderRadius: 3,
   fontSize: 16,
   color: "black",
-  background: "white",
 };
 
 export default function HeaderBar() {
@@ -110,7 +111,7 @@ export default function HeaderBar() {
             </Button>
             <Button
               variant="contained"
-              color="secondary"
+              color="inherit"
               href="/signup"
               sx={signupButtonStyle}
             >

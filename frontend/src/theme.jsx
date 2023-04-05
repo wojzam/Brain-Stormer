@@ -15,6 +15,10 @@ export const themeSettings = (mode) => {
             secondary: {
               main: "#ff7020",
             },
+            neutral: {
+              main: "#ebebeb",
+              darker: "#dedede",
+            },
             background: {
               default: "#fcfcfc",
             },
@@ -26,6 +30,10 @@ export const themeSettings = (mode) => {
             },
             secondary: {
               main: teal[500],
+            },
+            neutral: {
+              main: "#003831",
+              darker: "#002b26",
             },
             background: {
               default: "#004940",

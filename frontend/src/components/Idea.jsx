@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -14,6 +14,7 @@ export default function Idea({
   readOnly,
 }) {
   const [localVotes, setLocalVotes] = useState(userVote);
+  const theme = useTheme();
 
   const totalVotes = () => {
     return votes - userVote + localVotes;
@@ -85,9 +86,8 @@ export default function Idea({
         px: 5,
         py: 2,
         border: "solid",
-        borderColor: "#292929",
+        borderColor: theme.palette.neutral.main,
         borderRadius: 8,
-        background: "#f5f5f5",
       }}
     >
       <Box>

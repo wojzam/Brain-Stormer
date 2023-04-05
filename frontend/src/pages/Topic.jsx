@@ -23,6 +23,7 @@ const Topic = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setTopicData(data);
         setIdeas(data.ideas);
         setIsPending(false);
@@ -62,7 +63,11 @@ const Topic = () => {
               {isPending ? <Skeleton width={300} /> : topicData.title}
             </Typography>
             <Typography variant="h5" fontWeight="regular" noWrap>
-              {isPending ? <Skeleton width={200} /> : "Collaboratos: 4"}
+              {isPending ? (
+                <Skeleton width={200} />
+              ) : (
+                "Collaboratos: " + topicData.collaborators.length
+              )}
             </Typography>
           </Box>
           <Typography variant="h5" fontWeight="regular">

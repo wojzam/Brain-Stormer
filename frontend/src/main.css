@@ -18,7 +18,5 @@ body,
     display: flex;
     flex-direction: column;
     align-items: start;
-    padding-top: 20vh;
-    padding-left: 10vw;
-    padding-right: 10vw;
+    padding: 20vh 10vw 10vh;
 }

@@ -48,7 +48,6 @@ export default function AddIdeaButton({ topicId, setIdeas }) {
             border: "solid",
             borderColor: "#ebebeb",
             borderRadius: 8,
-            background: "background",
           }}
         >
           <Box display="flex" justifyContent="end" mb="0.5em">
@@ -96,7 +95,6 @@ export default function AddIdeaButton({ topicId, setIdeas }) {
             border: "dashed",
             borderColor: "#ebebeb",
             borderRadius: 8,
-            background: "background",
             cursor: "pointer",
           }}
         >
