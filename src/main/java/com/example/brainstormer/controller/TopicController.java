@@ -20,8 +20,8 @@ public class TopicController {
     private final TopicService topicService;
 
     @GetMapping
-    public List<TopicDto> getUserAccessibleTopics() {
-        return topicService.getUserAccessibleTopics();
+    public List<TopicDto> getUserAccessibleTopics(@RequestParam(required = false) String title) {
+        return topicService.getUserAccessibleTopics(title);
     }
 
     @GetMapping(path = "/{topicId}")

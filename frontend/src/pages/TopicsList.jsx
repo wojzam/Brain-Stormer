@@ -6,16 +6,6 @@ import TopicsListControls from "../components/TopicsListControls";
 const TopicsList = ({ isUserTopics }) => {
   const [topics, setTopics] = useState();
   const [isPending, setIsPending] = useState(true);
-  const [sortValue, setSortValue] = useState("");
-  const [filterValue, setFilterValue] = useState("");
-
-  const handleSortChange = (event) => {
-    setSortValue(event.target.value);
-  };
-
-  const handleFilterChange = (event) => {
-    setFilterValue(event.target.value);
-  };
 
   useEffect(() => {
     const endpoint = isUserTopics ? "/api/topic" : "/api/public/topic";
@@ -38,12 +28,7 @@ const TopicsList = ({ isUserTopics }) => {
       <Typography component="h1" variant="h2" fontWeight="medium" gutterBottom>
         {isUserTopics ? "My topics" : "Explore"}
       </Typography>
-      <TopicsListControls
-        sortValue={sortValue}
-        filterValue={filterValue}
-        handleSortChange={handleSortChange}
-        handleFilterChange={handleFilterChange}
-      />
+      <TopicsListControls {...{ isUserTopics, setTopics }} />
       {isPending && <CircularProgress />}
       {topics && topics.map((topic) => <Topic key={topic.id} {...topic} />)}
     </>

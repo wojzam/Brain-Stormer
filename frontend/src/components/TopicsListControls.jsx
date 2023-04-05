@@ -1,10 +1,18 @@
+import { useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 
-function TopicsListControls(props) {
-  const { sortValue, filterValue, handleSortChange, handleFilterChange } =
-    props;
+export default function TopicsListControls({ isUserTopics, setTopics }) {
+  const [sortValue, setSortValue] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+
+  const handleSortChange = (event) => {
+    setSortValue(event.target.value);
+  };
+
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
+  };
 
   return (
     <Box
@@ -15,7 +23,7 @@ function TopicsListControls(props) {
       width="100%"
       mb="2em"
     >
-      <SearchBar />
+      <SearchBar {...{ isUserTopics, setTopics }} />
       <Box>
         <FormControl sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="sort-label">Sort by</InputLabel>
@@ -46,12 +54,3 @@ function TopicsListControls(props) {
     </Box>
   );
 }
-
-TopicsListControls.propTypes = {
-  sortValue: PropTypes.string.isRequired,
-  filterValue: PropTypes.string.isRequired,
-  handleSortChange: PropTypes.func.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-};
-
-export default TopicsListControls;

@@ -27,8 +27,8 @@ public class PublicController {
     }
 
     @GetMapping("/topic")
-    public List<TopicDto> getPublicTopics() {
-        return publicService.getPublicTopics();
+    public List<TopicDto> getPublicTopics(@RequestParam(required = false) String title) {
+        return publicService.getPublicTopics(title);
     }
 
     @GetMapping(path = "/topic/{topicId}")

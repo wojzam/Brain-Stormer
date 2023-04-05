@@ -28,12 +28,16 @@ public class TopicService {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
 
-    public List<TopicDto> getUserAccessibleTopics() {
+    public List<TopicDto> getUserAccessibleTopics(String title) {
         User loggedInUser = authenticationService.getLoggedInUser();
-        return topicRepository.findAllByCreatorOrCollaboratorsContainingOrderByCreatedAtDesc(
-                        loggedInUser,
-                        loggedInUser
-                ).stream()
+        List<Topic> topics;
+
+        if (title != null && title.trim().length() > 0) {
+            topics = topicRepository.findAllByCreatorOrCollaboratorsAndTitle(loggedInUser, title);
+        } else {
+            topics = topicRepository.findAllByCreatorOrCollaborators(loggedInUser);
+        }
+        return topics.stream()
                 .map(TopicDto::new)
                 .collect(Collectors.toList());
     }

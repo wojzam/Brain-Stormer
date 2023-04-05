@@ -36,8 +36,14 @@ public class PublicService {
                 .collect(Collectors.toList());
     }
 
-    public List<TopicDto> getPublicTopics() {
-        return topicRepository.findAllByPublicVisibilityIsTrueOrderByCreatedAtDesc().stream()
+    public List<TopicDto> getPublicTopics(String title) {
+        List<Topic> topics;
+        if (title != null && title.trim().length() > 0) {
+            topics = topicRepository.findAllByPublicVisibilityIsTrueAndTitleContainingIgnoreCaseOrderByCreatedAtDesc(title);
+        } else {
+            topics = topicRepository.findAllByPublicVisibilityIsTrueOrderByCreatedAtDesc();
+        }
+        return topics.stream()
                 .map(TopicDto::new)
                 .collect(Collectors.toList());
     }
