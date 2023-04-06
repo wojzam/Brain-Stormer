@@ -66,6 +66,9 @@ public class TopicService {
                 .creator(loggedInUser)
                 .build();
 
+        for (String collaborator : request.getCollaborators()) {
+            topic.addCollaborator(parseUserFromString(collaborator));
+        }
         topicRepository.save(topic);
         return ResponseEntity.status(HttpStatus.CREATED).body(new TopicDto(topic));
     }
@@ -90,19 +93,17 @@ public class TopicService {
     }
 
     @Transactional
-    public void addCollaborator(UUID topicId, UUID collaboratorId) {
+    public void addCollaborator(UUID topicId, String collaboratorId) {
         Topic topic = getLoggedInUserTopic(topicId);
-        User user = userRepository.findById(collaboratorId).orElseThrow();
-
-        topic.addCollaborator(user);
+        topic.addCollaborator(parseUserFromString(collaboratorId));
     }
 
     @Transactional
-    public void removeCollaborator(UUID topicId, UUID collaboratorId) {
+    public void removeCollaborator(UUID topicId, String collaboratorId) {
         Topic topic = getLoggedInUserTopic(topicId);
-        User user = userRepository.findById(collaboratorId).orElseThrow();
+        User user = parseUserFromString(collaboratorId);
         if (!topic.getCollaborators().contains(user)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The collaborator could not be found");
         }
 
         topic.removeCollaborator(user);
@@ -117,5 +118,14 @@ public class TopicService {
         }
 
         return topic;
+    }
+
+    private User parseUserFromString(String userString) {
+        try {
+            UUID userId = UUID.fromString(userString);
+            return userRepository.findById(userId).orElseThrow();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user UUID");
+        }
     }
 }

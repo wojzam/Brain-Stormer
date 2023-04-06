@@ -29,11 +29,11 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.example.brainstormer.TestConstants.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -58,6 +58,7 @@ public class TopicControllerTest {
     private PasswordEncoder passwordEncoder;
     private Topic topic;
     private User user;
+    private User collaborator;
     private String token;
 
     @BeforeEach
@@ -66,6 +67,15 @@ public class TopicControllerTest {
                 User.builder()
                         .username(USERNAME)
                         .email(EMAIL)
+                        .password(passwordEncoder.encode(PASSWORD))
+                        .role(Role.USER)
+                        .build()
+        );
+
+        collaborator = userRepository.save(
+                User.builder()
+                        .username(USERNAME + "2")
+                        .email("2" + EMAIL)
                         .password(passwordEncoder.encode(PASSWORD))
                         .role(Role.USER)
                         .build()
@@ -89,7 +99,7 @@ public class TopicControllerTest {
     }
 
     private String topicCreateRequest() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.toString(), false));
+        return objectMapper.writeValueAsString(new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.toString(), false, Set.of()));
     }
 
     @Test
@@ -130,7 +140,7 @@ public class TopicControllerTest {
     @ValueSource(strings = {"abc", "category", ""})
     void shouldReturnBadRequest_whenCategoryIsInvalid(String invalidCategoryLabel) throws Exception {
         String topicCreateRequest = objectMapper.writeValueAsString(
-                new TopicCreateRequest(TITLE, DESCRIPTION, invalidCategoryLabel, false)
+                new TopicCreateRequest(TITLE, DESCRIPTION, invalidCategoryLabel, false, Set.of())
         );
 
         mvc
@@ -155,6 +165,28 @@ public class TopicControllerTest {
     void shouldReturnOk_whenDeletingTopic() throws Exception {
         mvc
                 .perform(requestWithJwtTokenHeader(delete(PATH + "/" + topic.getId())))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnOk_whenAddingCollaborator() throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnOk_whenRemovingCollaborator() throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())));
+
+        mvc
+                .perform(requestWithJwtTokenHeader(delete(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -199,7 +231,7 @@ public class TopicControllerTest {
     @ValueSource(strings = {"Business", "Education", "Lifestyle", "Science and Technology"})
     void shouldCreateTopicWithCorrectCategory(String categoryLabel) throws Exception {
         String topicCreateRequest = objectMapper.writeValueAsString(
-                new TopicCreateRequest(TITLE, DESCRIPTION, categoryLabel, false)
+                new TopicCreateRequest(TITLE, DESCRIPTION, categoryLabel, false, Set.of())
         );
 
         MvcResult result = mvc
@@ -215,6 +247,27 @@ public class TopicControllerTest {
         ).getId();
         Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
         assertEquals(categoryLabel, createdTopic.getCategory().toString());
+    }
+
+    @Test
+    void shouldCreateTopicWithCollaborator() throws Exception {
+        String topicCreateRequest = objectMapper.writeValueAsString(
+                new TopicCreateRequest(TITLE, DESCRIPTION, CATEGORY.toString(), false, Set.of(collaborator.getId().toString()))
+        );
+
+        MvcResult result = mvc
+                .perform(requestWithJwtTokenHeader(post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(topicCreateRequest)))
+                .andDo(print())
+                .andReturn();
+
+        UUID topicID = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                TopicDto.class
+        ).getId();
+        Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
+        assertTrue(createdTopic.getCollaborators().contains(collaborator));
     }
 
     @Test
@@ -237,5 +290,33 @@ public class TopicControllerTest {
                 .andDo(print());
 
         assertTrue(topicRepository.findById(topic.getId()).isEmpty());
+    }
+
+    @Test
+    void shouldAddCollaborator() throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        System.out.println(topic.getCollaborators());
+
+        assertTrue(topic.getCollaborators().contains(collaborator));
+    }
+
+    @Test
+    void shouldRemoveCollaborator() throws Exception {
+        mvc
+                .perform(requestWithJwtTokenHeader(post(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())));
+
+        mvc
+                .perform(requestWithJwtTokenHeader(delete(PATH + "/" + topic.getId() + "/collaborator")
+                        .param("userId", collaborator.getId().toString())))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertFalse(topic.getCollaborators().contains(collaborator));
     }
 }

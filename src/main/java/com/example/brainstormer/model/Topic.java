@@ -48,8 +48,7 @@ public class Topic {
     @ToString.Exclude
     private Set<Idea> ideas = new HashSet<>();
 
-    //TODO there is a problem with deleting user or topic
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "topic_collaborators",
             joinColumns = @JoinColumn(name = "topic_id"),
@@ -61,11 +60,21 @@ public class Topic {
     private Set<User> collaborators = new HashSet<>();
 
     public void addCollaborator(User user) {
-        collaborators.add(user);
+        if (user != creator) {
+            collaborators.add(user);
+            user.getCollaboratingTopics().add(this);
+        }
     }
 
     public void removeCollaborator(User user) {
         collaborators.remove(user);
+        user.getCollaboratingTopics().remove(this);
+    }
+
+    public void removeAllCollaborators() {
+        for (User user : collaborators) {
+            removeCollaborator(user);
+        }
     }
 
     public boolean userAccessDenied(User user) {

@@ -26,11 +26,27 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Topic> createdTopics = new HashSet<>();
+
     @ManyToMany(mappedBy = "collaborators")
     @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Topic> collaboratingTopics = new HashSet<>();
+
+    @PreRemove
+    private void removeUsersFromTopics() {
+        for (Topic topic : createdTopics) {
+            topic.removeAllCollaborators();
+        }
+        for (Topic topic : collaboratingTopics) {
+            topic.removeCollaborator(this);
+        }
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

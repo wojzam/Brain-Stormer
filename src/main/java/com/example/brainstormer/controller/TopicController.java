@@ -4,7 +4,6 @@ import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.service.TopicService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,15 +49,12 @@ public class TopicController {
     }
 
     @PostMapping("/{topicId}/collaborator")
-    public void addCollaborator(@PathVariable("topicId") UUID id, @Valid @RequestBody CollaboratorRequest request) {
-        topicService.addCollaborator(id, request.userId);
+    public void addCollaborator(@PathVariable("topicId") UUID topicId, @RequestParam String userId) {
+        topicService.addCollaborator(topicId, userId);
     }
 
     @DeleteMapping(path = "/{topicId}/collaborator")
-    public void removeCollaborator(@PathVariable("topicId") UUID id, @Valid @RequestBody CollaboratorRequest request) {
-        topicService.removeCollaborator(id, request.userId);
-    }
-
-    record CollaboratorRequest(@NotNull UUID userId) {
+    public void removeCollaborator(@PathVariable("topicId") UUID topicId, @RequestParam String userId) {
+        topicService.removeCollaborator(topicId, userId);
     }
 }
