@@ -42,7 +42,7 @@ public class Idea {
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    @OneToMany(mappedBy = "idea", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "idea", fetch = FetchType.LAZY)
     @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
