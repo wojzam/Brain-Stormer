@@ -15,6 +15,7 @@ public class IdeaDto {
     private String description;
     private int votes;
     private int userVote;
+    private boolean canEdit;
 
     public IdeaDto(Idea idea) {
         this.id = idea.getId();
@@ -22,11 +23,13 @@ public class IdeaDto {
         this.description = idea.getDescription();
         this.votes = 0;
         this.userVote = 0;
+        this.canEdit = false;
     }
 
     public IdeaDto(Idea idea, User user) {
         this(idea);
         this.votes = idea.sumAllVotes();
         this.userVote = idea.getUserVote(user);
+        this.canEdit = idea.getCreator() == user;
     }
 }

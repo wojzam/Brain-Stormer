@@ -12,6 +12,7 @@ export default function Idea({
   votes,
   userVote,
   readOnly,
+  canEdit,
   setIdeas,
 }) {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -63,7 +64,7 @@ export default function Idea({
             {!readOnly && <VotePanel {...{ id, votes, userVote }} />}
           </Box>
 
-          {!readOnly && (
+          {!readOnly && canEdit && (
             <Box>
               <IconButton onClick={handleEditClick}>
                 <EditOutlinedIcon />

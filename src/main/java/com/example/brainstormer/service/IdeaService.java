@@ -44,7 +44,9 @@ public class IdeaService {
                 .build();
 
         ideaRepository.save(idea);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new IdeaDto(idea));
+        IdeaDto ideaDto = new IdeaDto(idea);
+        ideaDto.setCanEdit(true);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ideaDto);
     }
 
     public IdeaDto getIdea(UUID id) {
