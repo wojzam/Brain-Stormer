@@ -49,10 +49,6 @@ public class IdeaService {
         return ResponseEntity.status(HttpStatus.CREATED).body(ideaDto);
     }
 
-    public IdeaDto getIdea(UUID id) {
-        return new IdeaDto(ideaRepository.findById(id).orElseThrow());
-    }
-
     @Transactional
     public void updateIdea(UUID id, String title, String description) {
         Idea idea = getLoggedInUserIdea(id);

@@ -26,12 +26,6 @@ public class IdeaController {
         return ideaService.createIdea(request);
     }
 
-    @GetMapping(path = "/{ideaId}")
-    public IdeaDto getIdea(@PathVariable("ideaId") UUID id) {
-        return ideaService.getIdea(id);
-    }
-
-
     @PutMapping(path = "/{ideaId}")
     public void updateIdea(
             @PathVariable("ideaId") UUID id,

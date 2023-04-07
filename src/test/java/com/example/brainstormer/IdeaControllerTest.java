@@ -31,14 +31,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 import static com.example.brainstormer.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -107,22 +104,6 @@ public class IdeaControllerTest {
     }
 
     @Test
-    void shouldReturnOk_whenGettingIdea() throws Exception {
-        mvc
-                .perform(requestWithJwtTokenHeader(get(PATH + "/" + idea.getId())))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void shouldReturnNotFound_whenIdeaNotPresent() throws Exception {
-        mvc
-                .perform(requestWithJwtTokenHeader(get(PATH + "/" + UUID.randomUUID())))
-                .andDo(print())
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void shouldReturnCreated_whenCreatingIdea() throws Exception {
         mvc
                 .perform(requestWithJwtTokenHeader(post(PATH)
@@ -176,16 +157,6 @@ public class IdeaControllerTest {
                 .perform(requestWithJwtTokenHeader(delete(PATH + "/" + idea.getId() + "/vote")))
                 .andDo(print())
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    void shouldGetIdea() throws Exception {
-        IdeaDto expectedIdea = new IdeaDto(idea);
-
-        mvc
-                .perform(requestWithJwtTokenHeader(get(PATH + "/" + idea.getId())))
-                .andDo(print())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedIdea)));
     }
 
     @Test
