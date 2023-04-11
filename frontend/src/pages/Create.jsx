@@ -37,6 +37,7 @@ export default function CreateTopic() {
     })
       .then((response) => response.json())
       .then((data) => {
+        window.history.pushState({ url: "/userTopics" }, "", "/userTopics");
         window.location.href = `/topic/${data.id}`;
       });
   };
