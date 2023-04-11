@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import CollaboratorsDialog from "../components/CollaboratorsDialog";
 
 export default function CreateTopic() {
+  const [collaborators, setCollaborators] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
 
@@ -31,6 +32,7 @@ export default function CreateTopic() {
         description: data.get("description"),
         publicVisibility: data.get("publicVisibility") === "public",
         category: selectedCategory,
+        collaborators: collaborators.map((user) => user.id),
       }),
     })
       .then((response) => response.json())
@@ -92,7 +94,7 @@ export default function CreateTopic() {
                 )}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} display="flex" justifyContent="center">
               <RadioGroup
                 aria-labelledby="radio-buttons-group-label"
                 defaultValue="private"
@@ -112,7 +114,7 @@ export default function CreateTopic() {
               </RadioGroup>
             </Grid>
           </Grid>
-          <CollaboratorsDialog />
+          <CollaboratorsDialog {...{ collaborators, setCollaborators }} />
           <Button
             type="submit"
             fullWidth

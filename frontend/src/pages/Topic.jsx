@@ -5,12 +5,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
 import AddIdeaButton from "../components/AddIdeaButton";
+import CollaboratorsDialog from "../components/CollaboratorsDialog";
 
 const Topic = () => {
   const { id } = useParams();
   const [topicData, setTopicData] = useState();
   const [isPending, setIsPending] = useState(true);
   const [ideas, setIdeas] = useState([]);
+  const [collaborators, setCollaborators] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,6 +27,7 @@ const Topic = () => {
       .then((data) => {
         setTopicData(data);
         setIdeas(data.ideas);
+        setCollaborators(data.collaborators);
         setIsPending(false);
       });
   }, []);
@@ -62,10 +65,12 @@ const Topic = () => {
               {isPending ? <Skeleton width={300} /> : topicData.title}
             </Typography>
             <Typography variant="h5" fontWeight="regular" noWrap>
-              {isPending ? (
-                <Skeleton width={200} />
-              ) : (
-                "Collaboratos: " + topicData.collaborators.length
+              {topicData && !topicData.readOnly && (
+                <CollaboratorsDialog
+                  updateMode={true}
+                  topicId={topicData.id}
+                  {...{ collaborators, setCollaborators }}
+                />
               )}
             </Typography>
           </Box>

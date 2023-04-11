@@ -1,103 +1,131 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
-import PersonIcon from "@mui/icons-material/Person";
-import AddIcon from "@mui/icons-material/Add";
-import { blue } from "@mui/material/colors";
+import { useState, useEffect } from "react";
+import {
+  Button,
+  IconButton,
+  TextField,
+  Dialog,
+  DialogTitle,
+  List,
+  ListItem,
+} from "@mui/material";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { UserListItem } from "./UserListItem";
 
-const usernames = ["jan", "adam"];
+export default function CollaboratorsDialog({
+  updateMode,
+  topicId,
+  collaborators,
+  setCollaborators,
+}) {
+  const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
 
-function CollaboratosDialog(props) {
-  const { onClose, selectedValue, open } = props;
+  useEffect(() => {
+    setSearchQuery("");
+    setSearchResult([]);
+  }, [open]);
 
-  const handleClose = () => {
-    onClose(selectedValue);
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+    handleSearch(event.target.value);
   };
 
-  const handleListItemClick = (value) => {
-    onClose(value);
+  const handleSearch = (query) => {
+    if (query.trim().length > 1) {
+      fetch(`/api/public/user?username=${query}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredData = data.filter(
+            (user) =>
+              user.username !== localStorage.getItem("user") &&
+              !collaborators.some((c) => c.id === user.id)
+          );
+          setSearchResult(filteredData);
+        });
+    } else {
+      setSearchResult([]);
+    }
   };
 
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Add Collaborators</DialogTitle>
-      <List sx={{ pt: 0 }}>
-        {usernames.map((email) => (
-          <ListItem disableGutters>
-            <ListItemButton
-              onClick={() => handleListItemClick(email)}
-              key={email}
-            >
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <PersonIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={email} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+  const handleAdd = (user) => {
+    updateMode && handleCollaboratorUpdate("POST", user.id);
 
-        <ListItem disableGutters>
-          <ListItemButton
-            autoFocus
-            onClick={() => handleListItemClick("addUser")}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <AddIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Add user" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Dialog>
-  );
-}
-
-CollaboratosDialog.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
-};
-
-export default function DialogDemo() {
-  const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(usernames[1]);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+    setCollaborators((prev) => [user, ...prev]);
+    setSearchResult([]);
+    setSearchQuery("");
   };
 
-  const handleClose = (value) => {
-    setOpen(false);
-    setSelectedValue(value);
+  const handleRemove = (id) => {
+    updateMode && handleCollaboratorUpdate("DELETE", id);
+
+    setCollaborators((prev) => prev.filter((user) => user.id !== id));
+  };
+
+  const handleCollaboratorUpdate = (method, userId) => {
+    const token = localStorage.getItem("token");
+    fetch(`/api/topic/${topicId}/collaborator?userId=${userId}`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   };
 
   return (
-    <div>
+    <>
       <Button
         fullWidth
-        variant="text"
-        onClick={handleClickOpen}
-        sx={{ mt: 3, mb: 2 }}
+        variant="outlined"
+        size="large"
+        onClick={() => setOpen(true)}
+        sx={{ my: 2 }}
       >
-        Add Collaborators
+        {"Collaboratos: " + collaborators.length}
       </Button>
-      <CollaboratosDialog
-        selectedValue={selectedValue}
-        open={open}
-        onClose={handleClose}
-      />
-    </div>
+      <Dialog onClose={() => setOpen(false)} open={open}>
+        <DialogTitle align="center" mx={10}>
+          Add Collaborators
+        </DialogTitle>
+        <TextField
+          sx={{ mx: 2, my: 1 }}
+          label="Find users"
+          placeholder="username..."
+          value={searchQuery}
+          onChange={handleInputChange}
+        />
+        <List>
+          {searchResult.map((user) => (
+            <ListItem
+              key={user.id}
+              secondaryAction={
+                <IconButton onClick={() => handleAdd(user)}>
+                  <ControlPointIcon sx={{ color: "green" }} />
+                </IconButton>
+              }
+            >
+              <UserListItem username={user.username} />
+            </ListItem>
+          ))}
+        </List>
+        <List>
+          <ListItem>Collaborators:</ListItem>
+          {collaborators.map((user) => (
+            <ListItem
+              key={user.id}
+              secondaryAction={
+                <IconButton onClick={() => handleRemove(user.id)}>
+                  <RemoveCircleOutlineIcon sx={{ color: "red" }} />
+                </IconButton>
+              }
+            >
+              <UserListItem username={user.username} />
+            </ListItem>
+          ))}
+        </List>
+      </Dialog>
+    </>
   );
 }
