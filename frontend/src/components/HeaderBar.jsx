@@ -111,7 +111,7 @@ export default function HeaderBar() {
             </Button>
             <Button
               variant="contained"
-              color="inherit"
+              color="light"
               href="/signup"
               sx={signupButtonStyle}
             >

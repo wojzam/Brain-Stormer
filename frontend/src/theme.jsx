@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
-import { teal } from "@mui/material/colors";
+import { teal, grey } from "@mui/material/colors";
 
 export const themeSettings = (mode) => {
   return {
@@ -39,6 +39,9 @@ export const themeSettings = (mode) => {
               default: "#004940",
             },
           }),
+      light: {
+        main: grey.A100,
+      },
     },
     typography: {
       fontFamily: ["Quicksand", "sans-serif"].join(","),
