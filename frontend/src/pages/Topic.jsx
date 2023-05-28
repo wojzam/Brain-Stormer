@@ -30,6 +30,60 @@ const Topic = () => {
         setCollaborators(data.collaborators);
         setIsPending(false);
       });
+
+    if (token) {
+      const socket = new WebSocket("ws://localhost:8080/websocket");
+
+      socket.addEventListener("open", () => {
+        socket.send(JSON.stringify({ token: token, topicId: id }));
+      });
+
+      socket.addEventListener("message", (event) => {
+        const receivedIdea = JSON.parse(event.data).idea;
+        const action = JSON.parse(event.data).action;
+        switch (action) {
+          case "CREATE":
+            setIdeas((prevIdeas) => [receivedIdea, ...prevIdeas]);
+            break;
+          case "UPDATE":
+            setIdeas((prevIdeas) =>
+              prevIdeas.map((prevIdea) =>
+                prevIdea.id === receivedIdea.id
+                  ? {
+                      ...prevIdea,
+                      title: receivedIdea.title,
+                      description: receivedIdea.description,
+                    }
+                  : prevIdea
+              )
+            );
+            break;
+          case "VOTE":
+            setIdeas((prevIdeas) =>
+              prevIdeas.map((prevIdea) =>
+                prevIdea.id === receivedIdea.id
+                  ? {
+                      ...prevIdea,
+                      votes: prevIdea.votes + receivedIdea.votes,
+                    }
+                  : prevIdea
+              )
+            );
+            break;
+          case "DELETE":
+            setIdeas((prevIdeas) =>
+              prevIdeas.filter((idea) => idea.id !== receivedIdea.id)
+            );
+            break;
+          default:
+            break;
+        }
+      });
+
+      socket.addEventListener("close", () => {
+        // TODO Attempt to reconnect
+      });
+    }
   }, []);
 
   return (

@@ -65,4 +65,9 @@ public class AuthenticationService {
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not logged in");
     }
+
+    public User getUserFromToken(String token) throws RuntimeException {
+        String username = jwtService.extractUsername(token);
+        return repository.findByUsername(username).orElseThrow();
+    }
 }

@@ -48,7 +48,7 @@ public class Topic {
     @ToString.Exclude
     private Set<Idea> ideas = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "topic_collaborators",
             joinColumns = @JoinColumn(name = "topic_id"),
