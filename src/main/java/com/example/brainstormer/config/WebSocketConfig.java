@@ -1,6 +1,6 @@
 package com.example.brainstormer.config;
 
-import com.example.brainstormer.WebSocketHandler;
+import com.example.brainstormer.websocket.IdeaUpdatesHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -12,12 +12,11 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final WebSocketHandler webSocketHandler;
+    private final IdeaUpdatesHandler ideaUpdatesHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // TODO find better name for websocket
-        registry.addHandler(webSocketHandler, "/websocket")
+        registry.addHandler(ideaUpdatesHandler, "/ws/idea-updates")
                 .setAllowedOrigins("*");
     }
 }

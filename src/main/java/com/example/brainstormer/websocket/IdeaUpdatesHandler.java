@@ -1,4 +1,4 @@
-package com.example.brainstormer;
+package com.example.brainstormer.websocket;
 
 import com.example.brainstormer.dto.IdeaUpdateMessage;
 import com.example.brainstormer.model.Topic;
@@ -26,12 +26,12 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class WebSocketHandler extends TextWebSocketHandler {
+public class IdeaUpdatesHandler extends TextWebSocketHandler {
 
     private static final String TOKEN = "token";
     private static final String TOPIC_ID = "topicId";
     private static final String USER_ID = "userId";
-    private final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(IdeaUpdatesHandler.class);
     private final Set<WebSocketSession> sessions = new HashSet<>();
     private final AuthenticationService authenticationService;
     private final TopicRepository topicRepository;
@@ -84,7 +84,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         return user.getId();
     }
 
-    @KafkaListener(topics = "ideaUpdate", groupId = "groupId")
+    @KafkaListener(topics = "idea-updates", groupId = "groupId")
     public void receiveIdeaUpdate(IdeaUpdateMessage ideaUpdateMessage) throws IOException {
         String ideaUpdateJson = objectMapper.writeValueAsString(ideaUpdateMessage);
         for (WebSocketSession session : sessions) {

@@ -128,7 +128,7 @@ public class IdeaService {
     }
 
     private void sendMessage(IdeaUpdateMessage ideaUpdateMessage) {
-        CompletableFuture<SendResult<String, IdeaUpdateMessage>> future = kafkaTemplate.send("ideaUpdate", ideaUpdateMessage);
+        CompletableFuture<SendResult<String, IdeaUpdateMessage>> future = kafkaTemplate.send("idea-updates", ideaUpdateMessage);
         future.whenComplete((result, ex) -> {
             if (ex != null) {
                 logger.warn("Unable to send message due to : " + ex.getMessage());

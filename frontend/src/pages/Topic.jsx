@@ -32,7 +32,7 @@ const Topic = () => {
       });
 
     if (token) {
-      const socket = new WebSocket("ws://localhost:8080/websocket");
+      const socket = new WebSocket("ws://localhost:8080/ws/idea-updates");
 
       socket.addEventListener("open", () => {
         socket.send(JSON.stringify({ token: token, topicId: id }));
