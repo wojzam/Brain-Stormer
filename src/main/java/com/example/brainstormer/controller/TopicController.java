@@ -38,9 +38,10 @@ public class TopicController {
             @PathVariable("topicId") UUID id,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String description,
+            @RequestParam(required = false) String category,
             @RequestParam(required = false) Boolean publicVisibility
     ) {
-        topicService.updateTopic(id, title, description, publicVisibility);
+        topicService.updateTopic(id, title, description, category, publicVisibility);
     }
 
     @DeleteMapping(path = "/{topicId}")

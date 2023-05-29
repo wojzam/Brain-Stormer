@@ -15,6 +15,7 @@ import { UserListItem } from "./UserListItem";
 export default function CollaboratorsDialog({
   updateMode,
   topicId,
+  disabled,
   collaborators,
   setCollaborators,
 }) {
@@ -81,7 +82,7 @@ export default function CollaboratorsDialog({
         variant="outlined"
         size="large"
         onClick={() => setOpen(true)}
-        sx={{ my: 2 }}
+        disabled={disabled}
       >
         {"Collaboratos: " + collaborators.length}
       </Button>

@@ -74,7 +74,7 @@ public class TopicService {
     }
 
     @Transactional
-    public void updateTopic(UUID id, String title, String description, Boolean publicVisibility) {
+    public void updateTopic(UUID id, String title, String description, String category, Boolean publicVisibility) {
         Topic topic = getLoggedInUserTopic(id);
 
         if (title != null && title.length() > 0) {
@@ -82,6 +82,9 @@ public class TopicService {
         }
         if (description != null) {
             topic.setDescription(description);
+        }
+        if (category != null) {
+            topic.setCategory(Category.getCategoryByLabel(category));
         }
         if (publicVisibility != null) {
             topic.setPublicVisibility(publicVisibility);

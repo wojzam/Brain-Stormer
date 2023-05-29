@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class TopicExtendedDto extends TopicDto {
     private List<IdeaDto> ideas;
     private List<UserDto> collaborators;
+    private boolean canEdit;
 
     public TopicExtendedDto(Topic topic, User user) {
         super(topic);
@@ -28,5 +29,7 @@ public class TopicExtendedDto extends TopicDto {
         this.collaborators = topic.getCollaborators().stream()
                 .map(UserDto::new)
                 .collect(Collectors.toList());
+
+        this.canEdit = topic.getCreator() == user;
     }
 }

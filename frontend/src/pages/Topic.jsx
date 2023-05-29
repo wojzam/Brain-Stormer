@@ -5,8 +5,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import BackButton from "../components/BackButton";
 import Idea from "../components/Idea";
 import AddIdeaButton from "../components/AddIdeaButton";
-import CollaboratorsDialog from "../components/CollaboratorsDialog";
 import useIdeaUpdates from "../hooks/useIdeaUpdates";
+import TopicControlPanel from "../components/TopicControlPanel";
 
 const Topic = () => {
   const { id } = useParams();
@@ -67,15 +67,9 @@ const Topic = () => {
             >
               {isPending ? <Skeleton width={300} /> : topicData.title}
             </Typography>
-            <Typography variant="h5" fontWeight="regular" noWrap>
-              {topicData && !topicData.readOnly && (
-                <CollaboratorsDialog
-                  updateMode={true}
-                  topicId={topicData.id}
-                  {...{ collaborators, setCollaborators }}
-                />
-              )}
-            </Typography>
+            <TopicControlPanel
+              {...{ topicData, setTopicData, collaborators, setCollaborators }}
+            />
           </Box>
           <Typography variant="h5" fontWeight="regular">
             {isPending ? <Skeleton width={600} /> : topicData.description}
