@@ -58,4 +58,9 @@ public class TopicController {
     public void removeCollaborator(@PathVariable("topicId") UUID topicId, @RequestParam String userId) {
         topicService.removeCollaborator(topicId, userId);
     }
+
+    @PostMapping("/{topicId}/generate")
+    public void generateIdeas(@PathVariable("topicId") UUID topicId) {
+        topicService.generateIdeas(topicId);
+    }
 }

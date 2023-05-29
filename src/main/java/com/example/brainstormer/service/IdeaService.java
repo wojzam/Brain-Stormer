@@ -36,10 +36,14 @@ public class IdeaService {
     private final KafkaTemplate<String, IdeaUpdateMessage> kafkaTemplate;
 
     public ResponseEntity<IdeaDto> createIdea(IdeaCreateRequest request) {
-        User loggedInUser = authenticationService.getLoggedInUser();
+        User user = authenticationService.getLoggedInUser();
+        return createIdea(request, user, user.getId());
+    }
+
+    public ResponseEntity<IdeaDto> createIdea(IdeaCreateRequest request, User user, UUID sessionUserId) {
         Topic topic = topicRepository.findById(request.getTopicId()).orElseThrow();
 
-        if (topic.userAccessDenied(loggedInUser)) {
+        if (topic.userAccessDenied(user)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
@@ -47,11 +51,12 @@ public class IdeaService {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .topic(topic)
-                .creator(loggedInUser)
+                .creator(user)
                 .build();
 
         ideaRepository.save(idea);
-        sendMessage(IdeaUpdateMessage.getCreateOf(idea, loggedInUser.getId()));
+
+        sendMessage(IdeaUpdateMessage.getCreateOf(idea, sessionUserId));
         IdeaDto ideaDto = new IdeaDto(idea);
         ideaDto.setCanEdit(true);
         return ResponseEntity.status(HttpStatus.CREATED).body(ideaDto);

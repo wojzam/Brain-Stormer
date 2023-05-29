@@ -27,6 +27,7 @@ public class TopicService {
     private final TopicRepository topicRepository;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final ChatGPTService chatGPTService;
 
     public List<TopicDto> getUserAccessibleTopics(String title) {
         User loggedInUser = authenticationService.getLoggedInUser();
@@ -130,5 +131,10 @@ public class TopicService {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user UUID");
         }
+    }
+
+    public void generateIdeas(UUID topicId) {
+        Topic topic = getLoggedInUserTopic(topicId);
+        chatGPTService.createGenerateIdeasAsyncTask(topic, authenticationService.getLoggedInUser());
     }
 }

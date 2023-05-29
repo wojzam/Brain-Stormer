@@ -67,9 +67,16 @@ const Topic = () => {
             >
               {isPending ? <Skeleton width={300} /> : topicData.title}
             </Typography>
-            <TopicControlPanel
-              {...{ topicData, setTopicData, collaborators, setCollaborators }}
-            />
+            {!isPending && (
+              <TopicControlPanel
+                {...{
+                  topicData,
+                  setTopicData,
+                  collaborators,
+                  setCollaborators,
+                }}
+              />
+            )}
           </Box>
           <Typography variant="h5" fontWeight="regular">
             {isPending ? <Skeleton width={600} /> : topicData.description}
