@@ -29,6 +29,7 @@ const signupButtonStyle = {
 
 export default function HeaderBar() {
   const [user, setUser] = useState(localStorage.getItem("user"));
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -42,7 +43,10 @@ export default function HeaderBar() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("id");
+    localStorage.removeItem("isAdmin");
     setUser(null);
+    setIsAdmin(false);
     handleClose();
     window.location.href = "/login";
   };
@@ -58,7 +62,10 @@ export default function HeaderBar() {
         .then((response) => response.json())
         .then((data) => {
           setUser(data.username);
+          setIsAdmin(data.admin);
           localStorage.setItem("user", data.username);
+          localStorage.setItem("id", data.id);
+          localStorage.setItem("isAdmin", data.admin);
         });
     }
   }, []);
@@ -84,6 +91,11 @@ export default function HeaderBar() {
           <Button href="/create" disabled={!user} sx={buttonStyle}>
             Create
           </Button>
+          {isAdmin && (
+            <Button href="/admin" sx={buttonStyle}>
+              Admin Dashboard
+            </Button>
+          )}
         </Box>
         {user ? (
           <Box mr={2}>

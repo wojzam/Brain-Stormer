@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import TopicsList from "./pages/TopicsList";
 import Create from "./pages/Create";
 import Topic from "./pages/Topic";
+import AdminDashboard from "./pages/AdminDashboard";
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import { Route, Routes } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -33,6 +34,7 @@ export default function App() {
             />
             <Route path="/create" element={<Create />} />
             <Route path="/topic/:id" element={<Topic />} />
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>
       </ThemeProvider>
