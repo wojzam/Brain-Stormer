@@ -65,7 +65,7 @@ export default function Idea({
           </Box>
 
           {!readOnly && canEdit && (
-            <Box>
+            <Box sx={{ whiteSpace: "nowrap" }}>
               <IconButton onClick={handleEditClick}>
                 <EditOutlinedIcon />
               </IconButton>
