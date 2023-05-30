@@ -1,13 +1,24 @@
-import * as React from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import ValidatedTextField from "../components/ValidatedTextField";
 
 export default function SignUp() {
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+
+  const handlePasswordsChange = (e) => {
+    const password = e.target.form.password.value;
+    const passwordRepeated = e.target.form.passwordRepeated.value;
+    setPasswordErrorMessage(
+      password !== passwordRepeated ? "Passwords do not match" : ""
+    );
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -46,33 +57,34 @@ export default function SignUp() {
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <ValidatedTextField
                 id="username"
                 label="Username"
                 name="username"
+                minLength={3}
+                maxLength={64}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <ValidatedTextField
                 id="email"
                 label="Email"
                 name="email"
                 autoComplete="email"
+                validateEmail={true}
+                maxLength={64}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <ValidatedTextField
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={handlePasswordsChange}
+                minLength={8}
+                maxLength={64}
               />
             </Grid>
             <Grid item xs={12}>
@@ -83,6 +95,9 @@ export default function SignUp() {
                 label="Repeat password"
                 type="password"
                 id="passwordRepeated"
+                error={passwordErrorMessage !== ""}
+                helperText={passwordErrorMessage}
+                onChange={handlePasswordsChange}
               />
             </Grid>
           </Grid>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -6,16 +6,7 @@ import { TopicForm } from "../components/TopicForm";
 
 export default function CreateTopic() {
   const [collaborators, setCollaborators] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState();
-
-  useEffect(() => {
-    fetch("/api/public/category")
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
-      });
-  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -58,7 +49,6 @@ export default function CreateTopic() {
         </Typography>
         <TopicForm
           handleSubmit={handleSubmit}
-          categories={categories}
           setSelectedCategory={setSelectedCategory}
           collaborators={collaborators}
           setCollaborators={setCollaborators}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -7,12 +7,12 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import ValidatedTextField from "./ValidatedTextField";
+import CategorySelect from "./CategorySelect";
 
 export default function TopicEditDialog({
   id,
@@ -25,19 +25,10 @@ export default function TopicEditDialog({
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(initialTitle);
   const [description, setDescription] = useState(initialDescription);
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [publicVisibility, setPublicVisibility] = useState(
     initialPublicVisibility
   );
-
-  useEffect(() => {
-    fetch("/api/public/category")
-      .then((response) => response.json())
-      .then((data) => {
-        setCategories(data);
-      });
-  }, []);
 
   const handleUpdate = () => {
     if (title.trim() !== "") {
@@ -79,31 +70,30 @@ export default function TopicEditDialog({
         <EditOutlinedIcon />
       </IconButton>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Edit Topic</DialogTitle>
+        <DialogTitle align="center" mx={20}>
+          Edit Topic
+        </DialogTitle>
         <DialogContent>
-          <TextField
+          <ValidatedTextField
             label="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            fullWidth
-            margin="normal"
+            maxLength={50}
+            sx={{ marginY: 1 }}
           />
-          <TextField
+          <ValidatedTextField
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            fullWidth
-            margin="normal"
+            minLength={0}
+            maxLength={1000}
             multiline
             rows={5}
+            sx={{ marginY: 2 }}
           />
-          <Autocomplete
-            disablePortal
-            id="category"
-            value={selectedCategory}
-            options={categories}
-            onChange={(event, value) => setSelectedCategory(value)}
-            renderInput={(params) => <TextField {...params} label="Category" />}
+          <CategorySelect
+            {...{ selectedCategory, setSelectedCategory }}
+            sx={{ marginY: 2 }}
           />
           <RadioGroup
             aria-labelledby="radio-buttons-group-label"

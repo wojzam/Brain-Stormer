@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Box, TextField, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import ValidatedTextField from "./ValidatedTextField";
 
 const createMode = "create";
 
@@ -82,21 +83,23 @@ export const IdeaForm = ({
           <CloseIcon />
         </IconButton>
       </Box>
-      <TextField
+      <ValidatedTextField
         id="title"
         label="Title"
         value={title}
-        required
         onChange={(event) => setTitle(event.target.value)}
         sx={{ marginBottom: 2 }}
+        maxLength={50}
       />
-      <TextField
+      <ValidatedTextField
         id="description"
         label="Description"
         value={description}
         onChange={(event) => setDescription(event.target.value)}
         multiline
         rows={3}
+        minLength={0}
+        maxLength={1000}
         sx={{ marginBottom: 2 }}
       />
       {mode === createMode ? (

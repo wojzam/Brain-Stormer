@@ -1,16 +1,15 @@
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Autocomplete from "@mui/material/Autocomplete";
 import CollaboratorsDialog from "../components/CollaboratorsDialog";
+import ValidatedTextField from "./ValidatedTextField";
+import CategorySelect from "./CategorySelect";
 
 export const TopicForm = ({
   handleSubmit,
-  categories,
   setSelectedCategory,
   collaborators,
   setCollaborators,
@@ -19,26 +18,26 @@ export const TopicForm = ({
     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
       <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={12}>
-          <TextField required fullWidth id="title" label="Title" name="title" />
+          <ValidatedTextField
+            id="title"
+            label="Title"
+            name="title"
+            maxLength={50}
+          />
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            fullWidth
+          <ValidatedTextField
             name="description"
             label="Description"
             id="description"
             multiline
             rows={5}
+            minLength={0}
+            maxLength={1000}
           />
         </Grid>
         <Grid item xs={12}>
-          <Autocomplete
-            disablePortal
-            id="category"
-            options={categories}
-            onChange={(event, value) => setSelectedCategory(value)}
-            renderInput={(params) => <TextField {...params} label="Category" />}
-          />
+          <CategorySelect {...{ selectedCategory: "", setSelectedCategory }} />
         </Grid>
         <Grid item xs={12} display="flex" justifyContent="center">
           <RadioGroup

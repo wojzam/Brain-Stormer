@@ -1,11 +1,10 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import ValidatedTextField from "../components/ValidatedTextField";
 
 export default function Login() {
   const handleSubmit = (event) => {
@@ -45,23 +44,23 @@ export default function Login() {
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <ValidatedTextField
                 id="username"
-                label="Username"
                 name="username"
+                label="Username"
+                minLength={3}
+                maxLength={64}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <ValidatedTextField
+                id="password"
                 name="password"
                 label="Password"
                 type="password"
-                id="password"
                 autoComplete="new-password"
+                minLength={8}
+                maxLength={64}
               />
             </Grid>
           </Grid>
