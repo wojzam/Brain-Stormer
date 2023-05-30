@@ -39,7 +39,13 @@ public class ChatGPTService {
 
     @PostConstruct
     private void initialize() {
-        service = (token == null || token.isBlank()) ? null : new OpenAiService(token, TIMEOUT);
+        if (token == null || token.isBlank()) {
+            service = null;
+            logger.warn("Failed ChatGPTService initialization - OPENAI_TOKEN variable is not set!");
+        } else{
+            service = new OpenAiService(token, TIMEOUT);
+            logger.info("ChatGPTService initialized successfully");
+        }
     }
 
     public void createGenerateIdeasAsyncTask(Topic topic, User user) {
