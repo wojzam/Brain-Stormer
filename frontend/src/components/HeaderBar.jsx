@@ -59,13 +59,21 @@ export default function HeaderBar() {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error();
+          }
+          return response.json();
+        })
         .then((data) => {
           setUser(data.username);
           setIsAdmin(data.admin);
           localStorage.setItem("user", data.username);
           localStorage.setItem("id", data.id);
           localStorage.setItem("isAdmin", data.admin);
+        })
+        .catch(() => {
+          handleLogout();
         });
     }
   }, []);

@@ -9,6 +9,7 @@ import TextField from "@mui/material/TextField";
 import ValidatedTextField from "../components/ValidatedTextField";
 
 export default function SignUp() {
+  const [errorMessage, setErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const handlePasswordsChange = (e) => {
@@ -22,6 +23,18 @@ export default function SignUp() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const password = data.get("password");
+    const passwordRepeated = data.get("passwordRepeated");
+
+    if (passwordRepeated.trim() === "") {
+      setErrorMessage("Repeated password is required");
+      return;
+    }
+
+    if (password !== passwordRepeated) {
+      setPasswordErrorMessage("Passwords do not match");
+      return;
+    }
 
     fetch("/api/auth/register", {
       method: "POST",
@@ -31,13 +44,23 @@ export default function SignUp() {
       body: JSON.stringify({
         username: data.get("username"),
         email: data.get("email"),
-        password: data.get("password"),
+        password: password,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(Object.values(JSON.parse(text)).join(", "));
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
         localStorage.setItem("token", data.token);
         window.location.href = `/userTopics`;
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
       });
   };
 
@@ -54,6 +77,11 @@ export default function SignUp() {
         <Typography component="h1" variant="h4" gutterBottom>
           Sign up
         </Typography>
+        {errorMessage && (
+          <Typography component="h5" variant="h5" color="error" gutterBottom>
+            {errorMessage}
+          </Typography>
+        )}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -61,7 +89,6 @@ export default function SignUp() {
                 id="username"
                 label="Username"
                 name="username"
-                minLength={3}
                 maxLength={64}
               />
             </Grid>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -7,6 +8,8 @@ import Container from "@mui/material/Container";
 import ValidatedTextField from "../components/ValidatedTextField";
 
 export default function Login() {
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -21,10 +24,23 @@ export default function Login() {
         password: data.get("password"),
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 401) {
+          throw new Error("Incorrect username or password");
+        }
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(Object.values(JSON.parse(text)).join(", "));
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
         localStorage.setItem("token", data.token);
         window.location.href = `/userTopics`;
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
       });
   };
 
@@ -41,6 +57,11 @@ export default function Login() {
         <Typography component="h1" variant="h4" gutterBottom>
           Login
         </Typography>
+        {errorMessage && (
+          <Typography component="h5" variant="h5" color="error" gutterBottom>
+            {errorMessage}
+          </Typography>
+        )}
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -48,7 +69,6 @@ export default function Login() {
                 id="username"
                 name="username"
                 label="Username"
-                minLength={3}
                 maxLength={64}
               />
             </Grid>

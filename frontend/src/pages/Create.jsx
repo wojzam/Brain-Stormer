@@ -7,6 +7,7 @@ import { TopicForm } from "../components/TopicForm";
 export default function CreateTopic() {
   const [collaborators, setCollaborators] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("None");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,10 +28,20 @@ export default function CreateTopic() {
         collaborators: collaborators.map((user) => user.id),
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+            throw new Error(JSON.parse(text).title);
+          });
+        }
+        return response.json();
+      })
       .then((data) => {
         window.history.pushState({ url: "/userTopics" }, "", "/userTopics");
         window.location.href = `/topic/${data.id}`;
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
       });
   };
 
@@ -47,6 +58,11 @@ export default function CreateTopic() {
         <Typography component="h1" variant="h4" gutterBottom>
           Create topic
         </Typography>
+        {errorMessage && (
+          <Typography component="h5" variant="h5" color="error" gutterBottom>
+            {errorMessage}
+          </Typography>
+        )}
         <TopicForm
           handleSubmit={handleSubmit}
           selectedCategory={selectedCategory}
