@@ -3,6 +3,7 @@ import { Box, Button, IconButton, Typography } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import CollaboratorsDialog from "../components/CollaboratorsDialog";
 import TopicEditDialog from "../components/TopicEditDialog";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 import useGenerateStatus from "../hooks/useGenerateStatus";
 
 export default function TopicControlPanel({
@@ -12,6 +13,8 @@ export default function TopicControlPanel({
   setCollaborators,
 }) {
   const [generateReady, setGenerateReady] = useState(false);
+  const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
   useGenerateStatus({ topicId: topicData.id, setReady: setGenerateReady });
 
   const handleGenerateClick = () => {
@@ -25,7 +28,7 @@ export default function TopicControlPanel({
     });
   };
 
-  const handleDeleteClick = () => {
+  const handleDelete = () => {
     const token = localStorage.getItem("token");
     fetch(`/api/topic/${topicData.id}`, {
       method: "DELETE",
@@ -69,9 +72,14 @@ export default function TopicControlPanel({
               setTopicData,
             }}
           />
-          <IconButton onClick={handleDeleteClick}>
+          <IconButton onClick={() => setOpenConfirmationDialog(true)}>
             <DeleteOutlinedIcon />
           </IconButton>
+          <ConfirmationDialog
+            open={openConfirmationDialog}
+            setOpen={setOpenConfirmationDialog}
+            onConfirm={handleDelete}
+          />
         </Box>
       )}
     </Box>
