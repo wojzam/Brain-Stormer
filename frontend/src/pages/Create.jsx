@@ -6,7 +6,7 @@ import { TopicForm } from "../components/TopicForm";
 
 export default function CreateTopic() {
   const [collaborators, setCollaborators] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategory, setSelectedCategory] = useState("None");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -49,6 +49,7 @@ export default function CreateTopic() {
         </Typography>
         <TopicForm
           handleSubmit={handleSubmit}
+          selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           collaborators={collaborators}
           setCollaborators={setCollaborators}
