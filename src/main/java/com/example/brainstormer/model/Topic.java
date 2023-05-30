@@ -42,7 +42,7 @@ public class Topic {
     @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
 
-    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "topic", cascade = CascadeType.ALL)
     @Builder.Default
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

@@ -2,6 +2,7 @@ package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.IdeaCreateRequest;
 import com.example.brainstormer.model.Category;
+import com.example.brainstormer.model.Idea;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.websocket.IdeaGenerateStatusHandler;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -59,7 +61,7 @@ public class ChatGPTService {
 
     @Async
     protected CompletableFuture<String> generateIdeasAsync(Topic topic, User user) {
-        return CompletableFuture.supplyAsync(() -> ask(generatePrompt(topic)))
+        return CompletableFuture.supplyAsync(() -> askChatGPT(generatePrompt(topic)))
                 .thenApply(response -> {
                     logger.info("Received response from chatGPT: " + response);
                     List<IdeaCreateRequest> ideaCreateRequests = convertResponseToIdeaCreateRequests(topic.getId(), response);
@@ -76,17 +78,25 @@ public class ChatGPTService {
     private String generatePrompt(Topic topic) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Give me 5 ideas for this topic: ").append(topic.getTitle());
-        if (topic.getDescription() != null) {
+        if (topic.getDescription() != null && !topic.getDescription().isBlank()) {
             stringBuilder.append(" - ").append(topic.getDescription());
         }
         if (topic.getCategory() != Category.NONE) {
             stringBuilder.append(".The topic category is ").append(topic.getCategory());
         }
+        Set<Idea> ideas = topic.getIdeas();
+        if (!ideas.isEmpty()) {
+            stringBuilder.append(".The current ideas are: ");
+            ideas.stream()
+                    .limit(10)
+                    .map(Idea::getTitle)
+                    .forEach(s -> stringBuilder.append(s).append(", "));
+        }
         stringBuilder.append(".Write your response in json array format with ideas. Each idea should be json object with two keys: title and description.");
         return stringBuilder.toString();
     }
 
-    private String ask(String prompt) {
+    private String askChatGPT(String prompt) {
         ChatCompletionRequest request = ChatCompletionRequest.builder()
                 .messages(List.of(new ChatMessage("user", prompt)))
                 .model("gpt-3.5-turbo")
