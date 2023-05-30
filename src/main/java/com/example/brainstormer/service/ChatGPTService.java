@@ -1,6 +1,7 @@
 package com.example.brainstormer.service;
 
 import com.example.brainstormer.dto.IdeaCreateRequest;
+import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
 import com.example.brainstormer.websocket.IdeaGenerateStatusHandler;
@@ -42,7 +43,7 @@ public class ChatGPTService {
         if (token == null || token.isBlank()) {
             service = null;
             logger.warn("Failed ChatGPTService initialization - OPENAI_TOKEN variable is not set!");
-        } else{
+        } else {
             service = new OpenAiService(token, TIMEOUT);
             logger.info("ChatGPTService initialized successfully");
         }
@@ -75,11 +76,12 @@ public class ChatGPTService {
     private String generatePrompt(Topic topic) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Give me 5 ideas for this topic: ").append(topic.getTitle());
-
         if (topic.getDescription() != null) {
             stringBuilder.append(" - ").append(topic.getDescription());
         }
-        stringBuilder.append(".The topic category is ").append(topic.getCategory());
+        if (topic.getCategory() != Category.NONE) {
+            stringBuilder.append(".The topic category is ").append(topic.getCategory());
+        }
         stringBuilder.append(".Write your response in json array format with ideas. Each idea should be json object with two keys: title and description.");
         return stringBuilder.toString();
     }

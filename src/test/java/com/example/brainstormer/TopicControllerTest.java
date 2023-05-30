@@ -3,6 +3,7 @@ package com.example.brainstormer;
 import com.example.brainstormer.dto.TopicCreateRequest;
 import com.example.brainstormer.dto.TopicDto;
 import com.example.brainstormer.dto.TopicExtendedDto;
+import com.example.brainstormer.model.Category;
 import com.example.brainstormer.model.Role;
 import com.example.brainstormer.model.Topic;
 import com.example.brainstormer.model.User;
@@ -247,6 +248,27 @@ public class TopicControllerTest {
         ).getId();
         Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
         assertEquals(categoryLabel, createdTopic.getCategory().toString());
+    }
+
+    @Test
+    void shouldCreateTopicWithCategoryNone_whenCategoryIsNotGiven() throws Exception {
+        String topicCreateRequest = objectMapper.writeValueAsString(
+                new TopicCreateRequest(TITLE, DESCRIPTION, null, false, Set.of())
+        );
+
+        MvcResult result = mvc
+                .perform(requestWithJwtTokenHeader(post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(topicCreateRequest)))
+                .andDo(print())
+                .andReturn();
+
+        UUID topicID = objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                TopicDto.class
+        ).getId();
+        Topic createdTopic = topicRepository.findById(topicID).orElseThrow();
+        assertEquals(Category.NONE, createdTopic.getCategory());
     }
 
     @Test

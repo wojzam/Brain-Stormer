@@ -25,7 +25,7 @@ export default function Topic({ id, title, description, category }) {
             {title}
           </Typography>
           <Typography variant="h6" fontWeight="light">
-            {category}
+            {category !== "None" && category}
           </Typography>
         </Box>
         <Typography variant="h6">{description}</Typography>

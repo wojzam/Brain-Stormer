@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 public enum Category {
+    NONE("None"),
     BUSINESS("Business"),
     EDUCATION("Education"),
     LIFESTYLE("Lifestyle"),
