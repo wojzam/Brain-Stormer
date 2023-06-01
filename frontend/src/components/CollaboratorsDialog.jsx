@@ -84,7 +84,7 @@ export default function CollaboratorsDialog({
         onClick={() => setOpen(true)}
         disabled={disabled}
       >
-        {"Collaboratos: " + collaborators.length}
+        {"Collaborators: " + collaborators.length}
       </Button>
       <Dialog onClose={() => setOpen(false)} open={open}>
         <DialogTitle align="center" mx={10}>
